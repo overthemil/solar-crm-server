@@ -1,0 +1,33 @@
+{
+  "name": "solar-crm-server",
+  "version": "1.0.0",
+  "description": "Solar CRM Tool - Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon --inspect=0.0.0.0",
+    "docker:build": "docker build -t overthemil/solar-crm-server:latest .",
+    "docker:push": "docker push overthemil/solar-crm-server:latest",
+    "docker:run": "docker run --rm -d  -p 3000:3000/tcp --name solar-crm-server overthemil/solar-crm-server:latest",
+    "docker:pull": "docker pull overthemil/solar-crm-server:latest",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/overthemil/solar-crm-server.git"
+  },
+  "keywords": [
+    "solar",
+    "crm"
+  ],
+  "author": "Pedro Alves",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/overthemil/solar-crm-server/issues"
+  },
+  "homepage": "https://github.com/overthemil/solar-crm-server#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19"
+  }
+}
