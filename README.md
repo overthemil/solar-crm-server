@@ -26,3 +26,9 @@ If you would like to attach a SQL client to the database, you can use the detail
 - Password: postgres
 - Host: localhost
 - Port: 9000
+
+## FAQ
+
+> I have changed something in the SQL files under database/sql but Postgres wasn't updated when I run docker compose up
+
+You will need to stop the container and destroy the volume with `docker compose down -v` if you would like all SQL files to be run again when you use the command `docker compose up`. If there are only minimal changes, an easier method would be to directly execute the SQL files by using a client like DataGrip by connecting using the instructions under _How to start developing_.
