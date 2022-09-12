@@ -1,15 +1,34 @@
 version: "3.4"
 
 services:
+  db:
+    image: postgres:bullseye
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=crm
+    ports:
+      - "9000:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./database/sql/:/docker-entrypoint-initdb.d/
   solarcrmserver:
     build:
       context: .
       dockerfile: ./Dockerfile.dev
+    depends_on:
+      - db
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      NODE_ENV: development
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/crm
     ports:
       - 3000:3000
       - 9229:9229
+
+volumes:
+  db:
+    driver: local
