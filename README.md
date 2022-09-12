@@ -2,9 +2,9 @@
 
 A CRM tool to manage Leads, Installs, Services and Stock for a solar retailer.
 
-This repository is for the **Server** component. All components can be found at:
+This repository is for the **Server** and **Database** components. All components can be found at:
 
-- [Server](https://github.com/overthemil/solar-crm-server)
+- [Server and Database](https://github.com/overthemil/solar-crm-server)
 
 ## How to start developing
 
@@ -18,3 +18,11 @@ docker compose up
 Go to the 'Run and Debug' tab on the left hand side (`Ctrl`+`Shift`+`D`) and click on the green Run button. The configuration name should be "Docker: Attach to Node". The server will then be running under [http://localhost:3000](http://localhost:3000).
 
 You should see a new terminal under "DEBUG CONSOLE". When you change something in the code, the server should automatically restart.
+
+If you would like to attach a SQL client to the database, you can use the details found in the Dockerfile. Currently the default values are:
+
+- Database name: crm
+- User: postgres
+- Password: postgres
+- Host: localhost
+- Port: 9000
