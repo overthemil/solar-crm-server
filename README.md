@@ -5,6 +5,7 @@ A CRM tool to manage Leads, Installs, Services and Stock for a solar retailer.
 This repository is for the **Server** and **Database** components. All components can be found at:
 
 - [Server and Database](https://github.com/overthemil/solar-crm-server)
+- [Postman API Collection](https://www.postman.com/overthemil/workspace/solar-crm/overview)
 
 ## How to start developing
 
@@ -31,4 +32,4 @@ If you would like to attach a SQL client to the database, you can use the detail
 
 > I have changed something in the SQL files under database/sql but Postgres wasn't updated when I run docker compose up
 
-You will need to stop the container and destroy the volume with `docker compose down -v` if you would like all SQL files to be run again when you use the command `docker compose up`. If there are only minimal changes, an easier method would be to directly execute the SQL files by using a client like DataGrip by connecting using the instructions under _How to start developing_.
+You will need to stop the container and destroy the volume with `docker compose down -v`. If there are only minimal changes, an easier method would be to directly execute the SQL commands by using a client like DataGrip by connecting using the instructions under _How to start developing_.
