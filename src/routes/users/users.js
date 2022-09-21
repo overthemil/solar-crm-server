@@ -1,5 +1,5 @@
 const db = require("../../db");
-const authenticate = require("../../middleware/auth");
+const { authenticate, authorize } = require("../../middleware/auth");
 const router = require("express-promise-router")();
 
 const { getUserSchema } = require("../../schema/user");
