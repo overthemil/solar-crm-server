@@ -24,8 +24,30 @@ const authenticate = (request, response, next) => {
       next();
     });
   } else {
-    return response.status(403).send("Unauthorized");
+    return response.status(403).send("Not logged in");
   }
 };
 
-module.exports = authenticate;
+/**
+ * Only gives access to the route to the roles passed.
+ * Example authorize(['Sales', 'Manager'])
+ *
+ * @param {[string]} roles
+ * @returns Next function
+ */
+const authorize = (roles) => {
+  return (request, response, next) => {
+    const request_has_valid_role = request.user.roles.some((a) =>
+      roles.includes(a.name)
+    );
+    if (request_has_valid_role) {
+      next();
+      return;
+    }
+
+    return response.status(403).send("Unauthorized");
+  };
+};
+
+module.exports.authenticate = authenticate;
+module.exports.authorize = authorize;

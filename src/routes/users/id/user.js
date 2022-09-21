@@ -6,7 +6,7 @@ const router = require("express-promise-router")();
 
 const { getUserRoles } = require("../../../utils/user");
 const { getUserSchema } = require("../../../schema/user");
-const authenticate = require("../../../middleware/auth");
+const { authenticate } = require("../../../middleware/auth");
 
 const salt_rounds = 10;
 
