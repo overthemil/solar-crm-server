@@ -23,6 +23,10 @@ app.use(unknownEndpoint);
 
 app.use(async (error, req, res, next) => {
   console.log("---------------------- Error ----------------------");
+  console.log(
+    "Time: ",
+    new Date().toLocaleString("en-AU", { timeZone: "Australia/Sydney" })
+  );
   console.log("Path: ", req.path);
   console.log("Request Body: ", req.body);
   console.error("Error: ", error.message);
