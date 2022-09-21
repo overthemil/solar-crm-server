@@ -1,9 +1,11 @@
-const express = require("express");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
 const db = require("../../../db");
-const router = express.Router();
+const router = require("express-promise-router")();
+
+const { getUserRoles } = require("../../../utils/user");
+const { getUserSchema } = require("../../../schema/user");
 
 const salt_rounds = 10;
 
@@ -14,12 +16,17 @@ router.get("/:id", async (request, response, next) => {
     return response.status(400).send("ID must be a valid UUID");
   }
 
-  const { rows } = await db.query("SELECT * FROM users WHERE id=$1", [id]);
-
-  if (rows.length === 0) {
+  const { rows: user_data } = await db.query(
+    "SELECT id, username, email, phone, active, create_date, last_updated FROM users WHERE id=$1",
+    [id]
+  );
+  if (user_data.length === 0) {
     return response.status(404).send("User not found");
   }
-  return response.status(200).json(rows[0]);
+
+  const user_roles = await getUserRoles(user_data[0].id);
+  const user = getUserSchema(user_data[0], user_roles);
+  return response.status(200).json(user);
 });
 
 router.post("/:id/create-password", async (request, response, next) => {
@@ -52,11 +59,14 @@ router.post("/:id/create-password", async (request, response, next) => {
 
   const hashed_pass = await bcrypt.hash(password, salt_rounds);
   const { rows } = await db.query(
-    "UPDATE users SET pass=$1 WHERE id=$2 RETURNING id, username, email, phone;",
+    "UPDATE users SET pass=$1 WHERE id=$2 RETURNING *",
     [hashed_pass, id]
   );
 
-  return response.status(200).json(rows[0]);
+  const user_roles = await getUserRoles(rows[0].id);
+  const updated_user = getUserSchema(rows[0], user_roles);
+
+  return response.status(200).json(updated_user);
 });
 
 module.exports = router;
