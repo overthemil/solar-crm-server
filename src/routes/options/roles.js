@@ -1,7 +1,9 @@
-const db = require("../../db");
 const router = require("express-promise-router")();
 
-router.get("/", async (request, response, next) => {
+const db = require("../../db");
+const authenticate = require("../../middleware/auth");
+
+router.get("/", authenticate, async (request, response, next) => {
   const { active } = request.query;
 
   const getQuery = () => {
@@ -24,7 +26,7 @@ router.get("/", async (request, response, next) => {
   return response.status(200).json(rows);
 });
 
-router.patch("/:id", async (request, response, next) => {
+router.patch("/:id", authenticate, async (request, response, next) => {
   const { id } = request.params;
   const { active } = request.body;
 
