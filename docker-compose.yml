@@ -25,6 +25,8 @@ services:
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgres://postgres:postgres@db:5432/crm
+      - ID_TOKEN_SECRET="SomeRandomPasswordForIDToken"
+      - REFRESH_TOKEN_SECRET="SomeRandomPasswordForRefreshToken"
     ports:
       - 3000:3000
       - 9229:9229

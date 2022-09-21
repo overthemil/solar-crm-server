@@ -1,10 +1,11 @@
 const db = require("../../db");
+const authenticate = require("../../middleware/auth");
 const router = require("express-promise-router")();
 
 const { getUserSchema } = require("../../schema/user");
 const { getUserRoles } = require("../../utils/user");
 
-router.get("/", async (request, response, next) => {
+router.get("/", authenticate, async (request, response, next) => {
   const { active } = request.query;
 
   const getQuery = () => {
@@ -43,7 +44,7 @@ router.get("/", async (request, response, next) => {
   return response.status(200).json(users);
 });
 
-router.post("/", async (request, response, next) => {
+router.post("/", authenticate, async (request, response, next) => {
   const { username, email, phone, role_id } = request.body;
 
   if ((!username, !email)) {
