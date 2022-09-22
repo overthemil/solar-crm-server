@@ -45,4 +45,33 @@ router.post("/login", async (request, response) => {
   return response.status(200).json({ id_token: tokens.id_token });
 });
 
+router.post("/refresh", async (request, response) => {
+  const refreshToken = request.cookies.refresh_token;
+  if (refreshToken === null) {
+    return response.status(400).send("No refresh token sent");
+  }
+
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+    if (error) {
+      return response
+        .status(401)
+        .send("Authentication error (Refresh the page)");
+    }
+
+    const tokens = jwtHelper.createJWT(user);
+    response.cookie("refresh_token", tokens.refresh_token, {
+      expires: new Date(Date.now() + ms("1y")),
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+    return response.status(200).json({ id_token: tokens.id_token });
+  });
+});
+
+router.post("/logout", async (request, response) => {
+  response.clearCookie("refresh_token");
+  return response.status(200).send("Logged out");
+});
+
 module.exports = router;
