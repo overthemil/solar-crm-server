@@ -1,10 +1,29 @@
 const express = require("express");
 require("dotenv").config();
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
+// ------------------------------- CORS SETUP ------------------------------- //
+const corsDomainsEnv = process.env.CORS_DOMAINS || "";
+const corsWhitelist = corsDomainsEnv.split(",").map((item) => item.trim());
+const corsConfig = {
+  origin: function (origin, callback) {
+    if (!origin || corsWhitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+// ------------------------------ EXPRESS SETUP ----------------------------- //
 const app = express();
 app.use(express.json());
 app.use(express.text());
-const port = 3000;
+app.use(cors(corsConfig));
+app.use(cookieParser());
+const port = process.env.PORT;
 
 // ----------------------------- NON API ROUTES ----------------------------- //
 app.get("/", async (req, res) => {
