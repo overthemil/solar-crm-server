@@ -11,4 +11,15 @@ const getUserRoles = async (user_id) => {
   return rows;
 };
 
+/**
+ * Check if user has any of the roles passed to the function
+ * @param user
+ * @param {[String]} roles
+ */
+const userHasRole = (user, roles) => {
+  const has_role = user.roles.some((a) => roles.includes(a.name));
+  return has_role;
+};
+
 module.exports.getUserRoles = getUserRoles;
+module.exports.userHasRole = userHasRole;

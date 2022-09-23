@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const ms = require("ms");
 
 const db = require("../../db");
+const { getUserSchema } = require("../../schema/user");
 const router = require("express-promise-router")();
 
 const { createJWT } = require("../../utils/jwt");
@@ -24,6 +25,12 @@ router.post("/login", async (request, response) => {
   }
   const user = rows[0];
   user.roles = await getUserRoles(user.id);
+
+  // If the user hasn't set their password yet
+  if (!user.pass) {
+    const user_schema = getUserSchema(user, user.roles);
+    return response.status(403).json(user_schema);
+  }
 
   // User email was found, check password
   const validPassword = await bcrypt.compare(password, user.pass);
