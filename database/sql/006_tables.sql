@@ -28,7 +28,7 @@ CREATE TABLE assigned_roles
 );
 
 -- ############################################################################
--- # Options
+-- # Options - Leads
 -- ############################################################################
 CREATE TABLE lead_sources
 (
@@ -37,4 +37,11 @@ CREATE TABLE lead_sources
     reference   TEXT UNIQUE NOT NULL,
     count       INT                  DEFAULT 0,
     active      BOOLEAN     NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE lead_status
+(
+    id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    status_name TEXT NOT NULL,
+    colour      TEXT NOT NULL
 );
