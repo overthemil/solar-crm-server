@@ -15,14 +15,26 @@ CREATE TABLE users
 
 CREATE TABLE roles
 (
-    id        SERIAL PRIMARY KEY,
+    id        UUID          DEFAULT gen_random_uuid() PRIMARY KEY,
     role_name TEXT NOT NULL,
     active    BOOL NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE assigned_roles
 (
-    id      SERIAL PRIMARY KEY,
-    role_id INT  NOT NULL,
+    id      UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    role_id UUID NOT NULL,
     user_id UUID NOT NULL
+);
+
+-- ############################################################################
+-- # Options
+-- ############################################################################
+CREATE TABLE lead_sources
+(
+    id          UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    source_name TEXT        NOT NULL,
+    reference   TEXT UNIQUE NOT NULL,
+    count       INT                  DEFAULT 0,
+    active      BOOLEAN     NOT NULL DEFAULT TRUE
 );

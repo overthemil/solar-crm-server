@@ -1,44 +1,49 @@
 const router = require("express-promise-router")();
 
 const db = require("../../db");
-const { authenticate } = require("../../middleware/auth");
+const { authenticate, authorize } = require("../../middleware/auth");
 
 router.get("/", authenticate, async (request, response, next) => {
   const { active } = request.query;
 
   const getQuery = () => {
-    if (active === "true") {
+    if (active) {
       return {
-        sql_query: "SELECT * FROM roles WHERE active=TRUE ORDER BY id ASC",
-        values: [],
-      };
-    } else if (active === "false") {
-      return {
-        sql_query: "SELECT * FROM roles WHERE active=FALSE ORDER BY id ASC",
+        sql_query:
+          "SELECT id, role_name as name, active FROM roles WHERE active=TRUE ORDER BY id ASC",
         values: [],
       };
     }
 
-    return { sql_query: "SELECT * FROM roles ORDER BY id ASC", values: [] };
+    return {
+      sql_query:
+        "SELECT id, role_name as name, active  FROM roles ORDER BY id ASC",
+      values: [],
+    };
   };
   const { sql_query, values } = getQuery();
   const { rows } = await db.query(sql_query, values);
   return response.status(200).json(rows);
 });
 
-router.patch("/:id", authenticate, async (request, response, next) => {
-  const { id } = request.params;
-  const { active } = request.body;
+router.patch(
+  "/:id",
+  authenticate,
+  authorize(["System Administrator", "Manager"]),
+  async (request, response, next) => {
+    const { id } = request.params;
+    const { active } = request.body;
 
-  const sql_query = `
+    const sql_query = `
     UPDATE roles SET
       active = COALESCE($1, active)
-    WHERE id = $2 RETURNING *;
+    WHERE id = $2 RETURNING *
   `;
-  const values = [active, id];
+    const values = [active, id];
 
-  const { rows } = await db.query(sql_query, values);
-  return response.status(200).json(rows[0]);
-});
+    const { rows } = await db.query(sql_query, values);
+    return response.status(200).json(rows[0]);
+  }
+);
 
 module.exports = router;
