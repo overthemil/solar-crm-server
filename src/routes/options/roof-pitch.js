@@ -3,7 +3,7 @@ const router = require("express-promise-router")();
 const db = require("../../db");
 const { authenticate, authorize } = require("../../middleware/auth");
 
-const table_name = "phases";
+const table_name = "roof_pitch";
 
 router.get("/", authenticate, async (request, response, next) => {
   const sql_query = `SELECT id, option_name as label, active FROM ${table_name} ORDER BY ord ASC`;
