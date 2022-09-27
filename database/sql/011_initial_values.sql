@@ -17,14 +17,14 @@ VALUES ('System Administrator'),
 -- # users
 -- ############################################################################
 INSERT INTO users(username, email)
-VALUES ('Admin', 'admin@spacesolar.com.au');
+VALUES ('Admin', 'it@spacesolar.com.au');
 
 -- ############################################################################
 -- # assigned_roles
 -- ############################################################################
 INSERT INTO assigned_roles(role_id, user_id)
 VALUES ((SELECT id FROM roles WHERE role_name = 'System Administrator'),
-        (SELECT id FROM users WHERE email = 'admin@spacesolar.com.au'));
+        (SELECT id FROM users WHERE email = 'it@spacesolar.com.au'));
 
 -- ############################################################################
 -- # lead_status
@@ -92,3 +92,13 @@ VALUES
        ('Flat'),
        ('Pitched'),
        ('Steep (>30)');
+
+-- ############################################################################
+-- # stock_types
+-- ############################################################################
+INSERT INTO
+    stock_types (option_name)
+VALUES
+       ('Panel'),
+       ('Inverter'),
+       ('Battery');

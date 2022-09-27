@@ -99,3 +99,11 @@ CREATE TABLE roof_pitch
     active      BOOLEAN NOT NULL DEFAULT TRUE,
     ord         SERIAL
 );
+
+CREATE TABLE stock_types
+(
+    id          UUID             DEFAULT gen_random_uuid() PRIMARY KEY,
+    option_name TEXT    NOT NULL,
+    active      BOOLEAN NOT NULL DEFAULT TRUE,
+    ord         SERIAL
+);

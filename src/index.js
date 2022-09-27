@@ -31,7 +31,14 @@ app.get("/", async (req, res) => {
 });
 
 // ------------------------------- API ROUTES ------------------------------- //
+/**
+ * AUTH
+ */
 app.use("/api/auth", require("./routes/auth/auth"));
+
+/**
+ * OPTIONS
+ */
 app.use("/api/options/roles", require("./routes/options/roles"));
 app.use("/api/options/lead-sources", require("./routes/options/lead-sources"));
 app.use("/api/options/lead-status", require("./routes/options/lead-status"));
@@ -43,8 +50,15 @@ app.use(
 );
 app.use("/api/options/roof-types", require("./routes/options/roof-types"));
 app.use("/api/options/roof-pitch", require("./routes/options/roof-pitch"));
+app.use("/api/options/stock-types", require("./routes/options/stock-types"));
+
+/**
+ * USERS
+ */
 app.use("/api/users", require("./routes/users/users"));
 app.use("/api/users", require("./routes/users/id/user"));
+
+// ----------------------------- END API ROUTES ----------------------------- //
 
 const unknownEndpoint = async (request, response) => {
   response.status(404).send("Unknown Endpoint");
