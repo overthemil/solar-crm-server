@@ -6,30 +6,9 @@ const { getUserSchema } = require("../../schema/user");
 const { getUserRoles } = require("../../utils/user");
 
 router.get("/", authenticate, async (request, response, next) => {
-  const { active } = request.query;
-
-  const getQuery = () => {
-    if (active === "true") {
-      return {
-        sql_query:
-          "SELECT id, username, email, phone, active, create_date, last_updated FROM users WHERE active=TRUE ORDER BY create_date ASC",
-        values: [],
-      };
-    } else if (active === "false") {
-      return {
-        sql_query:
-          "SELECT id, username, email, phone, active, create_date, last_updated FROM users WHERE active=FALSE ORDER BY create_date ASC",
-        values: [],
-      };
-    }
-
-    return {
-      sql_query:
-        "SELECT id, username, email, phone, active, create_date, last_updated FROM users ORDER BY create_date ASC",
-      values: [],
-    };
-  };
-  const { sql_query, values } = getQuery();
+  const sql_query =
+    "SELECT id, username, email, phone, active, create_date, last_updated FROM users ORDER BY create_date ASC";
+  const values = [];
   const { rows: user_rows } = await db.query(sql_query, values);
 
   const users = await Promise.all(
@@ -77,7 +56,7 @@ router.post("/", authenticate, async (request, response, next) => {
   const user_roles = await getUserRoles(user.id);
   const new_user = getUserSchema(user, user_roles);
 
-  return response.status(200).json(new_user);
+  return response.status(201).json(new_user);
 });
 
 module.exports = router;

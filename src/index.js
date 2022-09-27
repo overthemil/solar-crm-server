@@ -35,6 +35,7 @@ app.use("/api/auth", require("./routes/auth/auth"));
 app.use("/api/options/roles", require("./routes/options/roles"));
 app.use("/api/options/lead-sources", require("./routes/options/lead-sources"));
 app.use("/api/options/lead-status", require("./routes/options/lead-status"));
+app.use("/api/options/phases", require("./routes/options/phases"));
 app.use("/api/users", require("./routes/users/users"));
 app.use("/api/users", require("./routes/users/id/user"));
 
