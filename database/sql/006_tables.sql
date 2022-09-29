@@ -107,3 +107,13 @@ CREATE TABLE stock_types
     active      BOOLEAN NOT NULL DEFAULT TRUE,
     ord         SERIAL
 );
+
+CREATE TABLE files
+(
+    id          UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    file_name   TEXT        NOT NULL,
+    file_ext    TEXT        NOT NULL,
+    file_path   TEXT        NOT NULL,
+    pond_id     TEXT,
+    create_date timestamptz NOT NULL DEFAULT current_timestamp
+);

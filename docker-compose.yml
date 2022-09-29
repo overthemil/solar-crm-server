@@ -29,6 +29,7 @@ services:
       - REFRESH_TOKEN_SECRET="SomeRandomPasswordForRefreshToken"
       - PORT=3000
       - CORS_DOMAINS="localhost"
+      - UPLOAD_PATH="files/"
     ports:
       - 3000:3000
       - 9229:9229

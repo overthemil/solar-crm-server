@@ -58,6 +58,12 @@ app.use("/api/options/stock-types", require("./routes/options/stock-types"));
 app.use("/api/users", require("./routes/users/users"));
 app.use("/api/users", require("./routes/users/id/user"));
 
+/**
+ * FILES
+ */
+app.use("/api/files", require("./routes/files/files"));
+app.use("/api/files", require("./routes/files/id/file"));
+
 // ----------------------------- END API ROUTES ----------------------------- //
 
 const unknownEndpoint = async (request, response) => {
