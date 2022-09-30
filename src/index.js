@@ -64,6 +64,12 @@ app.use("/api/users", require("./routes/users/id/user"));
 app.use("/api/files", require("./routes/files/files"));
 app.use("/api/files", require("./routes/files/id/file"));
 
+/**
+ * CUSTOMERS
+ */
+app.use("/api/customers", require("./routes/customers/customers"));
+app.use("/api/customers", require("./routes/customers/id/customer"));
+
 // ----------------------------- END API ROUTES ----------------------------- //
 
 const unknownEndpoint = async (request, response) => {

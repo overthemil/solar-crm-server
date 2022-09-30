@@ -117,3 +117,16 @@ CREATE TABLE files
     pond_id     TEXT,
     create_date timestamptz NOT NULL DEFAULT current_timestamp
 );
+
+CREATE TABLE customers
+(
+    id           UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    first_name   TEXT,
+    last_name    TEXT,
+    company_name TEXT,
+    company_abn  TEXT,
+    email        TEXT,
+    phone        TEXT,
+    create_date  timestamptz NOT NULL DEFAULT current_timestamp,
+    last_updated timestamptz NOT NULL DEFAULT current_timestamp
+);
