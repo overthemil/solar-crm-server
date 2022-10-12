@@ -73,7 +73,7 @@ app.use("/api/customers", require("./routes/customers/id/customer"));
 // ----------------------------- END API ROUTES ----------------------------- //
 
 const unknownEndpoint = async (request, response) => {
-  response.status(404).send("Unknown Endpoint");
+  response.status(404).json({ message: "Unknown Endpoint" });
 };
 app.use(unknownEndpoint);
 
@@ -88,7 +88,7 @@ app.use(async (error, req, res, next) => {
   console.error("Error: ", error.message);
   console.log("---------------------------------------------------");
 
-  return res.status(500).send("Server error");
+  return res.status(500).json({ message: "Server error" });
 });
 
 app.listen(port, () => {

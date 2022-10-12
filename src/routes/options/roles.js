@@ -10,7 +10,7 @@ router.get("/", authenticate, async (request, response, next) => {
 
   const { rows } = await db.query(sql_query, values);
 
-  return response.status(200).json(rows);
+  return response.status(200).json({ data: rows });
 });
 
 router.patch(
@@ -29,7 +29,7 @@ router.patch(
     const values = [active, id];
 
     const { rows } = await db.query(sql_query, values);
-    return response.status(200).json(rows[0]);
+    return response.status(200).json({ data: rows[0] });
   }
 );
 

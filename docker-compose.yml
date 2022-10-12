@@ -31,7 +31,7 @@ services:
       - CORS_DOMAINS="localhost"
       - UPLOAD_PATH="files/"
     ports:
-      - 3000:3000
+      - 5000:3000
       - 9229:9229
 
 volumes:

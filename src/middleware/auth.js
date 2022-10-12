@@ -13,18 +13,18 @@ const authenticate = (request, response, next) => {
   ) {
     const token = request.headers.authorization.split("Bearer ")[1];
     if (!token) {
-      return response.status(401).send("Null Token");
+      return response.status(401).json({ message: "Null Token" });
     }
 
     jwt.verify(token, process.env.ID_TOKEN_SECRET, (error, user) => {
       if (error) {
-        return response.status(401).send("Authentication Failure");
+        return response.status(401).json({ message: "Authentication Failure" });
       }
       request.user = user;
       next();
     });
   } else {
-    return response.status(403).send("Not logged in");
+    return response.status(403).json({ message: "Not logged in" });
   }
 };
 
@@ -45,7 +45,7 @@ const authorize = (roles) => {
       return;
     }
 
-    return response.status(403).send("Unauthorized");
+    return response.status(403).json({ message: "Unauthorized" });
   };
 };
 

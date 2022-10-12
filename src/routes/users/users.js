@@ -20,14 +20,16 @@ router.get("/", authenticate, async (request, response, next) => {
     })
   );
 
-  return response.status(200).json(users);
+  return response.status(200).json({ data: users });
 });
 
 router.post("/", authenticate, async (request, response, next) => {
   const { username, email, phone, role_id } = request.body;
 
   if ((!username, !email)) {
-    return response.status(400).send("Username or email missing from body");
+    return response
+      .status(400)
+      .json({ message: "Username or email missing from body" });
   }
 
   const getRole = async () => {
@@ -56,7 +58,7 @@ router.post("/", authenticate, async (request, response, next) => {
   const user_roles = await getUserRoles(user.id);
   const new_user = getUserSchema(user, user_roles);
 
-  return response.status(201).json(new_user);
+  return response.status(201).json({ data: new_user });
 });
 
 module.exports = router;

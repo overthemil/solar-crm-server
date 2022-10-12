@@ -13,10 +13,10 @@ router.get("/:id", authenticate, async (request, response, next) => {
   const { rows } = await db.query(sql_query, [id]);
 
   if (rows.length === 0) {
-    return response.status(404).send("Not found");
+    return response.status(404).json({ message: "Not found" });
   }
 
-  return response.status(200).json(rows[0]);
+  return response.status(200).json({ data: rows[0] });
 });
 
 router.patch("/:id", authenticate, async (request, response) => {
@@ -45,7 +45,7 @@ router.patch("/:id", authenticate, async (request, response) => {
   ];
   const { rows } = await db.query(sql_query, sql_values);
 
-  return response.status(200).json(rows[0]);
+  return response.status(200).json({ data: rows[0] });
 });
 
 module.exports = router;

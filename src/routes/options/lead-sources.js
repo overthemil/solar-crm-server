@@ -8,7 +8,7 @@ router.get("/", authenticate, async (request, response, next) => {
 
   const { rows } = await db.query(sql_query);
 
-  return response.status(200).json(rows);
+  return response.status(200).json({ data: rows });
 });
 
 router.post("/", authenticate, async (request, response, next) => {
@@ -19,7 +19,7 @@ router.post("/", authenticate, async (request, response, next) => {
   const values = [label, reference];
 
   const { rows } = await db.query(sql_query, values);
-  return response.status(201).json(rows[0]);
+  return response.status(201).json({ data: rows[0] });
 });
 
 router.get("/:id", authenticate, async (request, response, next) => {
@@ -30,9 +30,9 @@ router.get("/:id", authenticate, async (request, response, next) => {
     [id]
   );
   if (rows.length === 0) {
-    return response.status(404).send("Not found");
+    return response.status(404).json({ message: "Not found" });
   }
-  return response.status(200).json(rows[0]);
+  return response.status(200).json({ data: rows[0] });
 });
 
 router.put("/:id", authenticate, async (request, response, next) => {
@@ -51,10 +51,10 @@ router.put("/:id", authenticate, async (request, response, next) => {
 
   const { rows } = await db.query(sql_query, values);
   if (rows.length === 0) {
-    return response.status(404).send("Not found");
+    return response.status(404).json({ message: "Not found" });
   }
 
-  return response.status(200).json(rows[0]);
+  return response.status(200).json({ data: rows[0] });
 });
 
 module.exports = router;

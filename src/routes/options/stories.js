@@ -10,7 +10,7 @@ router.get("/", authenticate, async (request, response, next) => {
 
   const { rows } = await db.query(sql_query);
 
-  return response.status(200).json(rows);
+  return response.status(200).json({ data: rows });
 });
 
 router.post(
@@ -25,7 +25,7 @@ router.post(
       [label]
     );
 
-    return response.status(201).json(rows[0]);
+    return response.status(201).json({ data: rows[0] });
   }
 );
 
@@ -42,7 +42,7 @@ router.patch(
       [id]
     );
     if (option_rows.length === 0) {
-      return response.status(404).send("Not found");
+      return response.status(404).json({ message: "Not found" });
     }
 
     const sql_query = `
@@ -54,7 +54,7 @@ router.patch(
     const values = [label, active, id];
 
     const { rows } = await db.query(sql_query, values);
-    return response.status(200).json(rows[0]);
+    return response.status(200).json({ data: rows[0] });
   }
 );
 

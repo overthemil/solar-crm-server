@@ -14,7 +14,7 @@ router.get("/:id", authenticate, async (request, response, next) => {
   const { id } = request.params;
 
   if (!validator.isUUID(id)) {
-    return response.status(400).send("ID must be a valid UUID");
+    return response.status(400).json({ message: "ID must be a valid UUID" });
   }
 
   const { rows: user_data } = await db.query(
@@ -22,12 +22,12 @@ router.get("/:id", authenticate, async (request, response, next) => {
     [id]
   );
   if (user_data.length === 0) {
-    return response.status(404).send("User not found");
+    return response.status(404).json({ message: "User not found" });
   }
 
   const user_roles = await getUserRoles(user_data[0].id);
   const user = getUserSchema(user_data[0], user_roles);
-  return response.status(200).json(user);
+  return response.status(200).json({ data: user });
 });
 
 router.post("/:id/create-password", async (request, response, next) => {
@@ -35,10 +35,10 @@ router.post("/:id/create-password", async (request, response, next) => {
   const { password } = request.body;
 
   if (!password) {
-    return response.status(400).send("Missing password");
+    return response.status(400).json({ message: "Missing password" });
   }
   if (!validator.isUUID(id)) {
-    return response.status(400).send("ID must be a valid UUID");
+    return response.status(400).json({ message: "ID must be a valid UUID" });
   }
 
   const { rows: user_data } = await db.query(
@@ -46,16 +46,15 @@ router.post("/:id/create-password", async (request, response, next) => {
     [id]
   );
   if (user_data.length === 0) {
-    return response.status(404).send("User not found");
+    return response.status(404).json({ message: "User not found" });
   }
   const user = user_data[0];
 
   if (user.pass) {
-    return response
-      .status(400)
-      .send(
-        "This endpoint can only be used for new accounts that don't have a password yet"
-      );
+    return response.status(400).json({
+      message:
+        "This endpoint can only be used for new accounts that don't have a password yet",
+    });
   }
 
   const hashed_pass = await bcrypt.hash(password, salt_rounds);
@@ -67,7 +66,7 @@ router.post("/:id/create-password", async (request, response, next) => {
   const user_roles = await getUserRoles(rows[0].id);
   const updated_user = getUserSchema(rows[0], user_roles);
 
-  return response.status(200).json(updated_user);
+  return response.status(200).json({ data: updated_user });
 });
 
 router.patch(
@@ -77,26 +76,28 @@ router.patch(
     const { password } = request.body;
     const { id } = request.params;
     if (!password) {
-      return response.status(400).send("No password sent");
+      return response.status(400).json({ message: "No password sent" });
     }
     if (password.length < 5) {
       return response
         .status(400)
-        .send("Password must be at least 5 characters");
+        .json({ message: "Password must be at least 5 characters" });
     }
 
     if (id !== request.user.id) {
       if (!userHasRole(request.user, ["System Administrator"])) {
         return response
           .status(401)
-          .send("Not authorized to change this user's password");
+          .json({ message: "Not authorized to change this user's password" });
       }
     }
 
     // Hash the password then insert into the accounts table
     bcrypt.hash(password, salt_rounds, async (error, hash) => {
       if (error) {
-        return response.status(500).send("Error when updating password");
+        return response
+          .status(500)
+          .json({ message: "Error when updating password" });
       }
       const sqlQuery = `
           UPDATE users SET
@@ -111,7 +112,7 @@ router.patch(
       const user_roles = await getUserRoles(rows[0].id);
       const updated_user = getUserSchema(rows[0], user_roles);
 
-      return response.status(200).json(updated_user);
+      return response.status(200).json({ data: updated_user });
     });
   }
 );
@@ -125,10 +126,12 @@ router.put(
     const { id } = request.params;
 
     if (!roles) {
-      return response.status(400).send("Must pass roles to set");
+      return response.status(400).json({ message: "Must pass roles to set" });
     }
     if (!Array.isArray(roles)) {
-      return response.status(400).send("Roles must be in an array");
+      return response
+        .status(400)
+        .json({ message: "Roles must be in an array" });
     }
 
     await db.query("DELETE FROM assigned_roles WHERE user_id = $1", [id]);
@@ -146,7 +149,7 @@ router.put(
     const user_roles = await getUserRoles(rows[0].id);
     const updated_user = getUserSchema(rows[0], user_roles);
 
-    return response.status(200).json(updated_user);
+    return response.status(200).json({ data: updated_user });
   }
 );
 
@@ -159,7 +162,7 @@ router.patch("/:id", authenticate, async (request, response) => {
     if (!userHasRole(request.user, ["System Administrator", "Manager"])) {
       return response
         .status(401)
-        .send("Not authorized to change this user's details");
+        .json({ message: "Not authorized to change this user's details" });
     }
   }
 
@@ -173,7 +176,7 @@ router.patch("/:id", authenticate, async (request, response) => {
       if (users_with_email.length > 0) {
         return response
           .status(400)
-          .send("User with this email address already exists");
+          .json({ message: "User with this email address already exists" });
       }
     }
   }
@@ -192,7 +195,7 @@ router.patch("/:id", authenticate, async (request, response) => {
   const user_roles = await getUserRoles(user_rows[0].id);
   const updated_user = getUserSchema(user_rows[0], user_roles);
 
-  return response.status(200).json(updated_user);
+  return response.status(200).json({ data: updated_user });
 });
 
 module.exports = router;

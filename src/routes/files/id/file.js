@@ -13,10 +13,10 @@ router.get("/:id", authenticate, async (request, response, next) => {
   const { rows } = await db.query(sql_query, [id]);
 
   if (rows.length === 0) {
-    return response.status(404).send("Not found");
+    return response.status(404).json({ message: "Not found" });
   }
 
-  return response.status(200).json(rows[0]);
+  return response.status(200).json({ data: rows[0] });
 });
 
 router.delete(
@@ -30,7 +30,7 @@ router.delete(
       [id]
     );
     if (file_rows.length === 0) {
-      return response.status(404).send("Not found");
+      return response.status(404).json({ message: "Not found" });
     }
 
     const sql_query = `
@@ -38,7 +38,7 @@ router.delete(
   `;
     await db.query(sql_query, [id]);
 
-    return response.status(200).send("File deleted");
+    return response.status(200).json({ message: "File deleted" });
   }
 );
 
@@ -50,7 +50,7 @@ router.delete("/:id", authenticate, async (request, response, next) => {
     [id]
   );
   if (file_rows.length === 0) {
-    return response.status(404).send("Not found");
+    return response.status(404).json({ message: "Not found" });
   }
 
   const sql_query = `
@@ -58,7 +58,7 @@ router.delete("/:id", authenticate, async (request, response, next) => {
   `;
   await db.query(sql_query, [id]);
 
-  return response.status(200).send("File deleted");
+  return response.status(200).json({ message: "File deleted" });
 });
 
 module.exports = router;

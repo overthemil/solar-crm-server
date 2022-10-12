@@ -14,7 +14,7 @@ router.get(
 
     const { rows } = await db.query(sql_query);
 
-    return response.status(200).json(rows);
+    return response.status(200).json({ data: rows });
   }
 );
 
@@ -34,7 +34,7 @@ router.post("/", authenticate, async (request, response, next) => {
     pond_id,
   ]);
 
-  return response.status(201).json(rows[0]);
+  return response.status(201).json({ data: rows[0] });
 });
 
 module.exports = router;
