@@ -25,11 +25,11 @@ services:
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgres://postgres:postgres@db:5432/crm
-      - ID_TOKEN_SECRET="SomeRandomPasswordForIDToken"
-      - REFRESH_TOKEN_SECRET="SomeRandomPasswordForRefreshToken"
+      - ID_TOKEN_SECRET=SomeRandomPasswordForIDToken
+      - REFRESH_TOKEN_SECRET=SomeRandomPasswordForRefreshToken
       - PORT=3000
-      - CORS_DOMAINS="localhost"
-      - UPLOAD_PATH="files/"
+      - CORS_DOMAINS=http://localhost:3000
+      - UPLOAD_PATH=files/
     ports:
       - 5000:3000
       - 9229:9229

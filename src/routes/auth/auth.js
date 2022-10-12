@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const ms = require("ms");
 
 const db = require("../../db");
+const { authenticate } = require("../../middleware/auth");
 const { getUserSchema } = require("../../schema/user");
 const router = require("express-promise-router")();
 
@@ -60,7 +61,14 @@ router.post("/login", async (request, response) => {
     sameSite: "none",
     secure: true,
   });
-  return response.status(200).json({ data: { id_token: tokens.id_token } });
+
+  const user_roles = await getUserRoles(user.id);
+  return response.status(200).json({
+    data: {
+      id_token: tokens.id_token,
+      user: getUserSchema(user, user_roles),
+    },
+  });
 });
 
 router.post("/refresh", async (request, response) => {
@@ -90,6 +98,17 @@ router.post("/refresh", async (request, response) => {
 router.post("/logout", async (request, response) => {
   response.clearCookie("refresh_token");
   return response.status(200).json({ message: "Logged out" });
+});
+
+router.get("/me", authenticate, async (request, response) => {
+  const { rows } = await db.query("SELECT * FROM users WHERE id = $1", [
+    request.user.id,
+  ]);
+  const user = rows[0];
+  const user_roles = await getUserRoles(user.id);
+  return response
+    .status(200)
+    .json({ data: { user: getUserSchema(user, user_roles) } });
 });
 
 module.exports = router;
