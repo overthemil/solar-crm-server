@@ -73,10 +73,10 @@ router.patch(
   "/:id/change-password",
   authenticate,
   async (request, response) => {
-    const { password } = request.body;
+    const { old_password, password } = request.body;
     const { id } = request.params;
-    if (!password) {
-      return response.status(400).json({ message: "No password sent" });
+    if (!password || !old_password) {
+      return response.status(400).json({ message: "Some fields are missing" });
     }
     if (password.length < 5) {
       return response
@@ -93,11 +93,15 @@ router.patch(
     }
 
     const { rows: user_data } = await db.query(
-      "SELECT * FROM users WHERE id=$1 ORDER BY create_date ASC",
+      "SELECT * FROM users WHERE id=$1",
       [id]
     );
     if (user_data.length === 0) {
       return response.status(404).json({ message: "User not found" });
+    }
+    const validPassword = await bcrypt.compare(old_password, user_data[0].pass);
+    if (!validPassword) {
+      return response.status(403).json({ message: "Incorrect password" });
     }
 
     // Hash the password then insert into the accounts table
