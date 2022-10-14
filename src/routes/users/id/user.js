@@ -92,6 +92,14 @@ router.patch(
       }
     }
 
+    const { rows: user_data } = await db.query(
+      "SELECT * FROM users WHERE id=$1 ORDER BY create_date ASC",
+      [id]
+    );
+    if (user_data.length === 0) {
+      return response.status(404).json({ message: "User not found" });
+    }
+
     // Hash the password then insert into the accounts table
     bcrypt.hash(password, salt_rounds, async (error, hash) => {
       if (error) {
@@ -99,12 +107,6 @@ router.patch(
           .status(500)
           .json({ message: "Error when updating password" });
       }
-      const sqlQuery = `
-          UPDATE users SET
-            pass = $1 
-          WHERE id = $2;
-        `;
-      const values = [hash, id];
       const { rows } = await db.query(
         "UPDATE users SET pass=$1 WHERE id=$2 RETURNING *",
         [hash, id]
