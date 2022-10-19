@@ -13,6 +13,16 @@ router.get("/", authenticate, async (request, response, next) => {
   return response.status(200).json({ data: rows });
 });
 
+router.get("/:id", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+
+  const sql_query = `SELECT id, option_name as label, active FROM ${table_name} WHERE id=$1`;
+
+  const { rows } = await db.query(sql_query, [id]);
+
+  return response.status(200).json({ data: rows });
+});
+
 router.post(
   "/",
   authenticate,
