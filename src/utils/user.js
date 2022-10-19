@@ -17,7 +17,7 @@ const getUserRoles = async (user_id) => {
  * @param {[String]} roles
  */
 const userHasRole = (user, roles) => {
-  const has_role = user.roles.some((a) => roles.includes(a.name));
+  const has_role = user.roles.some((a) => roles.includes(a.label));
   return has_role;
 };
 

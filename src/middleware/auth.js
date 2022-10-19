@@ -38,7 +38,7 @@ const authenticate = (request, response, next) => {
 const authorize = (roles) => {
   return (request, response, next) => {
     const request_has_valid_role = request.user.roles.some((a) =>
-      roles.includes(a.name)
+      roles.includes(a.label)
     );
     if (request_has_valid_role) {
       next();

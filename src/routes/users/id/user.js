@@ -172,21 +172,6 @@ router.patch("/:id", authenticate, async (request, response) => {
     }
   }
 
-  // Check if the email already exists in the database
-  if (email) {
-    if (request.user.email !== email) {
-      const { rows: users_with_email } = await db.query(
-        "SELECT id FROM users WHERE email=$1",
-        [email]
-      );
-      if (users_with_email.length > 0) {
-        return response
-          .status(400)
-          .json({ message: "User with this email address already exists" });
-      }
-    }
-  }
-
   const sql_query = `
       UPDATE users SET
         username = COALESCE($1, username),
