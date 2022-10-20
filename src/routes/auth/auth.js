@@ -84,7 +84,7 @@ router.post("/refresh", async (request, response) => {
         .json({ message: "Authentication error (Refresh the page)" });
     }
 
-    const tokens = jwtHelper.createJWT(user);
+    const tokens = createJWT(user);
     response.cookie("refresh_token", tokens.refresh_token, {
       expires: new Date(Date.now() + ms("1y")),
       httpOnly: true,
