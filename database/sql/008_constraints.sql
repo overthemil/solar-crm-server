@@ -8,3 +8,18 @@ ALTER TABLE assigned_roles
 ALTER TABLE assigned_roles
     ADD CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES users (id)
         ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- ############################################################################
+-- # stock_item
+-- ############################################################################
+ALTER TABLE stock_item
+    ADD CONSTRAINT stock_type_fk FOREIGN KEY (stock_type) REFERENCES stock_types (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE stock_item
+    ADD CONSTRAINT datasheet_fk FOREIGN KEY (datasheet) REFERENCES files (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE stock_item
+    ADD CONSTRAINT warranty_fk FOREIGN KEY (warranty) REFERENCES files (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;

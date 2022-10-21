@@ -108,16 +108,6 @@ CREATE TABLE stock_types
     ord         SERIAL
 );
 
-CREATE TABLE files
-(
-    id          UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
-    file_name   TEXT        NOT NULL,
-    file_ext    TEXT        NOT NULL,
-    file_path   TEXT        NOT NULL,
-    pond_id     TEXT,
-    create_date timestamptz NOT NULL DEFAULT current_timestamp
-);
-
 CREATE TABLE customers
 (
     id           UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -129,4 +119,33 @@ CREATE TABLE customers
     phone        TEXT,
     create_date  timestamptz NOT NULL DEFAULT current_timestamp,
     last_updated timestamptz NOT NULL DEFAULT current_timestamp
+);
+
+-- ############################################################################
+-- # Stock
+-- ############################################################################
+CREATE TABLE stock_item
+(
+    id         UUID    DEFAULT gen_random_uuid() PRIMARY KEY,
+    stock_type UUID NOT NULL,   
+    brand      TEXT,
+    series     TEXT,
+    model      TEXT NOT NULL,
+    active     BOOLEAN DEFAULT TRUE,
+    datasheet  UUID,
+    warranty   UUID,
+    count      INT     DEFAULT 0
+);
+
+-- ############################################################################
+-- # Files
+-- ############################################################################
+CREATE TABLE files
+(
+    id          UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    file_name   TEXT        NOT NULL,
+    file_ext    TEXT        NOT NULL,
+    file_path   TEXT        NOT NULL,
+    pond_id     TEXT,
+    create_date timestamptz NOT NULL DEFAULT current_timestamp
 );
