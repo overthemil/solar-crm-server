@@ -62,12 +62,32 @@ router.post(
     "Accounts",
   ]),
   async (request, response, next) => {
-    const { type, brand, series, model } = request.body;
+    const { type_id, brand, series, model } = request.body;
 
-    const { rows } = await db.query(
+    const { rows: stock_rows } = await db.query(
       "INSERT INTO stock_item(stock_type, brand, series, model) VALUES ($1, $2, $3, $4) RETURNING *",
-      [type, brand, series, model]
+      [type_id, brand, series, model]
     );
+    const stock_id = stock_rows[0].id;
+
+    const sql_query = `
+    SELECT s.id,
+        s.stock_type   as type_id,
+        st.option_name as type,
+        s.brand,
+        s.series,
+        s.model,
+        s.active,
+        s.datasheet,
+        s.warranty,
+        s.count
+    FROM stock_item s
+        LEFT JOIN stock_types st on s.stock_type = st.id
+    WHERE s.id = $1
+    ORDER BY brand, series, model;
+  `;
+
+    const { rows } = await db.query(sql_query, [stock_id]);
 
     return response.status(201).json({ data: rows[0] });
   }
@@ -85,8 +105,16 @@ router.patch(
     "Accounts",
   ]),
   async (request, response) => {
-    const { type, brand, series, model, active, datasheet, warranty, count } =
-      request.body;
+    const {
+      type_id,
+      brand,
+      series,
+      model,
+      active,
+      datasheet,
+      warranty,
+      count,
+    } = request.body;
     const { id } = request.params;
 
     const sql_query = `
@@ -102,7 +130,7 @@ router.patch(
       WHERE id=$9 RETURNING *;
     `;
     const sql_values = [
-      type,
+      type_id,
       brand,
       series,
       model,
@@ -112,7 +140,28 @@ router.patch(
       count,
       id,
     ];
-    const { rows } = await db.query(sql_query, sql_values);
+    const { rows: stock_rows } = await db.query(sql_query, sql_values);
+
+    const stock_id = stock_rows[0].id;
+
+    const stock_query = `
+    SELECT s.id,
+        s.stock_type   as type_id,
+        st.option_name as type,
+        s.brand,
+        s.series,
+        s.model,
+        s.active,
+        s.datasheet,
+        s.warranty,
+        s.count
+    FROM stock_item s
+        LEFT JOIN stock_types st on s.stock_type = st.id
+    WHERE s.id = $1
+    ORDER BY brand, series, model;
+  `;
+
+    const { rows } = await db.query(stock_query, [stock_id]);
 
     return response.status(200).json({ data: rows[0] });
   }
