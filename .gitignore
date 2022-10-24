@@ -105,3 +105,6 @@ dist
 
 # Jet Brains IDE
 .idea/
+
+# File upload folder
+files/

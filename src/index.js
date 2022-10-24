@@ -65,6 +65,11 @@ app.use("/api/files", require("./routes/files/files"));
 app.use("/api/files", require("./routes/files/id/file"));
 
 /**
+ * UPLOAD
+ */
+app.use("/api/upload", require("./routes/upload"));
+
+/**
  * CUSTOMERS
  */
 app.use("/api/customers", require("./routes/customers/customers"));
