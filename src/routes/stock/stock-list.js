@@ -62,11 +62,11 @@ router.post(
     "Accounts",
   ]),
   async (request, response, next) => {
-    const { type_id, brand, series, model } = request.body;
+    const { type_id, brand, series, model, active = true } = request.body;
 
     const { rows: stock_rows } = await db.query(
-      "INSERT INTO stock_item(stock_type, brand, series, model) VALUES ($1, $2, $3, $4) RETURNING *",
-      [type_id, brand, series, model]
+      "INSERT INTO stock_item(stock_type, brand, series, model, active) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [type_id, brand, series, model, active]
     );
     const stock_id = stock_rows[0].id;
 
