@@ -48,4 +48,34 @@ router.patch("/:id", authenticate, async (request, response) => {
   return response.status(200).json({ data: rows[0] });
 });
 
+router.get("/:id/logs", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+
+  const sql_query = `
+    SELECT * FROM customer_logs WHERE customer_id = $1 ORDER BY create_date DESC;
+  `;
+
+  const { rows } = await db.query(sql_query, [id]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.post("/:id/logs", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+  const { msg, auto } = request.body;
+
+  const sql_query = `
+    INSERT INTO customer_logs(customer_id, msg, auto, created_by) VALUES ($1, $2, $3, $4) RETURNING *;
+  `;
+
+  const { rows } = await db.query(sql_query, [
+    id,
+    msg,
+    auto,
+    request.user.username,
+  ]);
+
+  return response.status(200).json({ data: rows });
+});
+
 module.exports = router;

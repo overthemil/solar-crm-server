@@ -23,3 +23,10 @@ ALTER TABLE stock_item
 ALTER TABLE stock_item
     ADD CONSTRAINT warranty_fk FOREIGN KEY (warranty) REFERENCES files (id)
         ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- ############################################################################
+-- # customer_logs
+-- ############################################################################
+ALTER TABLE customer_logs
+    ADD CONSTRAINT customer_fk FOREIGN KEY (customer_id) REFERENCES customers (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;

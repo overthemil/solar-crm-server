@@ -121,13 +121,23 @@ CREATE TABLE customers
     last_updated timestamptz NOT NULL DEFAULT current_timestamp
 );
 
+CREATE TABLE customer_logs
+(
+    id          UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    customer_id UUID        NOT NULL,
+    msg         TEXT        NOT NULL,
+    auto        BOOLEAN     NOT NULL DEFAULT TRUE,
+    created_by  TEXT        NOT NULL,
+    create_date timestamptz NOT NULL DEFAULT current_timestamp
+);
+
 -- ############################################################################
 -- # Stock
 -- ############################################################################
 CREATE TABLE stock_item
 (
     id         UUID    DEFAULT gen_random_uuid() PRIMARY KEY,
-    stock_type UUID NOT NULL,   
+    stock_type UUID NOT NULL,
     brand      TEXT,
     series     TEXT,
     model      TEXT NOT NULL,
