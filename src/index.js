@@ -51,6 +51,7 @@ app.use(
 app.use("/api/options/roof-types", require("./routes/options/roof-types"));
 app.use("/api/options/roof-pitch", require("./routes/options/roof-pitch"));
 app.use("/api/options/stock-types", require("./routes/options/stock-types"));
+app.use("/api/options/states", require("./routes/options/states"));
 
 /**
  * USERS
@@ -79,6 +80,11 @@ app.use("/api/customers", require("./routes/customers/id/customer"));
  * STOCK
  */
 app.use("/api/stock", require("./routes/stock/stock-list"));
+
+/**
+ * SERVICES
+ */
+app.use("/api/services", require("./routes/services/services"));
 
 // ----------------------------- END API ROUTES ----------------------------- //
 

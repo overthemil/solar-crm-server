@@ -29,10 +29,8 @@ VALUES ((SELECT id FROM roles WHERE role_name = 'System Administrator'),
 -- ############################################################################
 -- # lead_status
 -- ############################################################################
-INSERT INTO
-    lead_status (status_name, colour)
-VALUES
-       ('New', '#3d4bb8'),
+INSERT INTO lead_status (status_name, colour)
+VALUES ('New', '#3d4bb8'),
        ('Attempting Contact', '#f29c5e'),
        ('Park', '#616975'),
        ('Quotation', '#dbcb5e'),
@@ -46,59 +44,55 @@ VALUES
 -- ############################################################################
 -- # phases
 -- ############################################################################
-INSERT INTO
-    phases (option_name)
-VALUES
-       ('1'),
+INSERT INTO phases (option_name)
+VALUES ('1'),
        ('2'),
        ('3');
 
 -- ############################################################################
 -- # existing_system
 -- ############################################################################
-INSERT INTO
-    existing_system (option_name)
-VALUES
-       ('New'),
+INSERT INTO existing_system (option_name)
+VALUES ('New'),
        ('Replace'),
        ('Additional');
 
 -- ############################################################################
 -- # stories
 -- ############################################################################
-INSERT INTO
-    stories (option_name)
-VALUES
-       ('1'),
+INSERT INTO stories (option_name)
+VALUES ('1'),
        ('2'),
        ('3+');
 
 -- ############################################################################
 -- # roof_types
 -- ############################################################################
-INSERT INTO
-    roof_types (option_name)
-VALUES
-       ('Tile'),
+INSERT INTO roof_types (option_name)
+VALUES ('Tile'),
        ('Tin'),
        ('Klip-Lok');
 
 -- ############################################################################
 -- # roof_pitch
 -- ############################################################################
-INSERT INTO
-    roof_pitch (option_name)
-VALUES
-       ('Flat'),
+INSERT INTO roof_pitch (option_name)
+VALUES ('Flat'),
        ('Pitched'),
        ('Steep (>30)');
 
 -- ############################################################################
 -- # stock_types
 -- ############################################################################
-INSERT INTO
-    stock_types (option_name)
-VALUES
-       ('Panel'),
+INSERT INTO stock_types (option_name)
+VALUES ('Panel'),
        ('Inverter'),
        ('Battery');
+
+-- ############################################################################
+-- # service_status
+-- ############################################################################
+INSERT INTO service_status (status_name, colour)
+VALUES ('New', '#3d4bb8'),
+       ('In Progress', '#9b3fd1'),
+       ('Complete', '#37bd3b');

@@ -43,10 +43,9 @@ CREATE TABLE lead_sources
 
 CREATE TABLE lead_status
 (
-    id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    id          SERIAL PRIMARY KEY,
     status_name TEXT NOT NULL,
-    colour      TEXT NOT NULL,
-    ord         SERIAL
+    colour      TEXT NOT NULL
 );
 
 -- ############################################################################
@@ -108,6 +107,9 @@ CREATE TABLE stock_types
     ord         SERIAL
 );
 
+-- ############################################################################
+-- # Customers
+-- ############################################################################
 CREATE TABLE customers
 (
     id           UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -129,6 +131,17 @@ CREATE TABLE customer_logs
     auto        BOOLEAN     NOT NULL DEFAULT TRUE,
     created_by  TEXT        NOT NULL,
     create_date timestamptz NOT NULL DEFAULT current_timestamp
+);
+
+-- ############################################################################
+-- # States (As in address states - NSW, QLD)
+-- ############################################################################
+CREATE TABLE states
+(
+    id          UUID             DEFAULT gen_random_uuid() PRIMARY KEY,
+    option_name TEXT    NOT NULL,
+    active      BOOLEAN NOT NULL DEFAULT TRUE,
+    reference   TEXT    NOT NULL
 );
 
 -- ############################################################################
@@ -158,4 +171,57 @@ CREATE TABLE files
     file_path   TEXT        NOT NULL,
     pond_id     TEXT,
     create_date timestamptz NOT NULL DEFAULT current_timestamp
+);
+
+-- ############################################################################
+-- # Services
+-- ############################################################################
+CREATE TABLE services
+(
+    id              UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    visit_scheduled BOOLEAN     NOT NULL DEFAULT FALSE,
+    visit           timestamptz,
+    paid            BOOLEAN     NOT NULL DEFAULT FALSE,
+    customer_id     UUID        NOT NULL,
+    street          TEXT        NOT NULL,
+    suburb          TEXT        NOT NULL,
+    state           UUID        NOT NULL,
+    postcode        TEXT        NOT NULL,
+    description     TEXT,
+    status_id       INT         NOT NULL DEFAULT 1,
+    created_by      UUID        NOT NULL,
+    create_date     timestamptz NOT NULL DEFAULT current_timestamp
+);
+
+CREATE TABLE service_status
+(
+    id          SERIAL PRIMARY KEY,
+    status_name TEXT NOT NULL,
+    colour      TEXT NOT NULL
+);
+
+CREATE TABLE service_items
+(
+    id          UUID             DEFAULT gen_random_uuid() PRIMARY KEY,
+    description TEXT    NOT NULL,
+    service_id  UUID    NOT NULL,
+    price       NUMERIC NOT NUll DEFAULT 0
+);
+
+CREATE TABLE service_logs
+(
+    id                UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    service_id        UUID        NOT NULL,
+    msg               TEXT        NOT NULL,
+    auto              BOOLEAN     NOT NULL DEFAULT TRUE,
+    service_status_id INT         NOT NULL,
+    created_by        UUID        NOT NULL,
+    create_date       timestamptz NOT NULL DEFAULT current_timestamp
+);
+
+CREATE TABLE service_files
+(
+    id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    service_id UUID NOT NULL,
+    file_id    UUID NOT NULL
 );
