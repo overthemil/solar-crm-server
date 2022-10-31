@@ -41,7 +41,7 @@ app.use("/api/auth", require("./routes/auth/auth"));
  */
 app.use("/api/options/roles", require("./routes/options/roles"));
 app.use("/api/options/lead-sources", require("./routes/options/lead-sources"));
-app.use("/api/options/lead-status", require("./routes/options/lead-status"));
+app.use("/api/options", require("./routes/options/status"));
 app.use("/api/options/phases", require("./routes/options/phases"));
 app.use("/api/options/stories", require("./routes/options/stories"));
 app.use(
@@ -85,6 +85,7 @@ app.use("/api/stock", require("./routes/stock/stock-list"));
  * SERVICES
  */
 app.use("/api/services", require("./routes/services/services"));
+app.use("/api/services", require("./routes/services/id/service"));
 
 // ----------------------------- END API ROUTES ----------------------------- //
 

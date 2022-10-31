@@ -92,7 +92,11 @@ VALUES ('Panel'),
 -- ############################################################################
 -- # service_status
 -- ############################################################################
-INSERT INTO service_status (status_name, colour)
-VALUES ('New', '#3d4bb8'),
+INSERT INTO
+    service_status (status_name, colour)
+VALUES
+       ('New', '#3d4bb8'),
        ('In Progress', '#9b3fd1'),
-       ('Complete', '#37bd3b');
+       ('Quotation', '#dedb3a'),
+       ('Complete', '#37bd3b'),
+       ('Closed', '#e00b0b');

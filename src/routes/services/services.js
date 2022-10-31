@@ -35,33 +35,6 @@ router.get("/", authenticate, async (request, response, next) => {
   return response.status(200).json({ data: services });
 });
 
-router.get("/:id", authenticate, async (request, response, next) => {
-  const { id } = request.params;
-
-  const sql_query = `
-    SELECT s.*,
-        ss.status_name as status,
-        ss.colour      as status_colour,
-        c.first_name,
-        c.last_name,
-        c.email,
-        c.company_name,
-        c.company_abn,
-        c.phone,
-        s2.option_name as state_name
-    FROM services s
-        LEFT JOIN service_status ss on ss.id = s.status_id
-        LEFT JOIN customers c on c.id = s.customer_id
-        LEFT JOIN states s2 on s.state = s2.id
-    WHERE s.id = $1
-  `;
-
-  const { rows } = await db.query(sql_query, [id]);
-  const service = getServiceSchema(rows[0]);
-
-  return response.status(200).json({ data: service });
-});
-
 router.post("/", authenticate, async (request, response, next) => {
   const { customer_id, street, suburb, state, postcode, description } =
     request.body;
