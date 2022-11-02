@@ -113,4 +113,16 @@ router.patch("/:id/items", authenticate, async (request, response) => {
   return response.status(200).json({ data: rows[0] });
 });
 
+router.delete("/:id/items/:item", authenticate, async (request, response) => {
+  const { id, item } = request.params;
+
+  const sql_query = `
+    DELETE FROM service_items WHERE service_id = $1 AND id = $2
+    `;
+  const sql_values = [id, item];
+  const { rows } = await db.query(sql_query, sql_values);
+
+  return response.status(200).json({ message: "Item Deleted" });
+});
+
 module.exports = router;
