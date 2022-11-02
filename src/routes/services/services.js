@@ -2,7 +2,7 @@ const router = require("express-promise-router")();
 
 const db = require("../../db");
 const { authenticate, authorize } = require("../../middleware/auth");
-const { getServiceSchema } = require("../../schema/service");
+const { getServiceSchemaSummary } = require("../../schema/service");
 
 router.get("/", authenticate, async (request, response, next) => {
   const sql_query = `
@@ -26,7 +26,7 @@ router.get("/", authenticate, async (request, response, next) => {
 
   const services = await Promise.all(
     rows.map(async (data) => {
-      const user_schema = getServiceSchema(data);
+      const user_schema = getServiceSchemaSummary(data);
 
       return user_schema;
     })

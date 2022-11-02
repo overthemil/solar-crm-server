@@ -26,7 +26,13 @@ router.get("/:id", authenticate, async (request, response, next) => {
   `;
 
   const { rows } = await db.query(sql_query, [id]);
-  const service = getServiceSchema(rows[0]);
+
+  const { rows: items } = await db.query(
+    "SELECT * FROM service_items WHERE service_id = $1 ORDER BY price DESC",
+    [id]
+  );
+
+  const service = getServiceSchema(rows[0], items);
 
   return response.status(200).json({ data: service });
 });
@@ -73,6 +79,35 @@ router.patch("/:id", authenticate, async (request, response) => {
     status_id,
     id,
   ];
+  const { rows } = await db.query(sql_query, sql_values);
+
+  return response.status(200).json({ data: rows[0] });
+});
+
+router.post("/:id/items", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+  const { description, price } = request.body;
+
+  const sql_query = `
+    INSERT INTO service_items(description, service_id, price) VALUES($1, $2, $3) RETURNING *;
+  `;
+
+  const { rows } = await db.query(sql_query, [description, id, price]);
+
+  return response.status(200).json({ data: rows[0] });
+});
+
+router.patch("/:id/items", authenticate, async (request, response) => {
+  const { item_id, description, price } = request.body;
+  const { id } = request.params;
+
+  const sql_query = `
+      UPDATE service_items SET
+        description = COALESCE($1, description),
+        price = COALESCE($2, price)
+      WHERE id=$3 RETURNING *;
+    `;
+  const sql_values = [description, price, item_id];
   const { rows } = await db.query(sql_query, sql_values);
 
   return response.status(200).json({ data: rows[0] });
