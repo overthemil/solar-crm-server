@@ -17,7 +17,8 @@ router.get("/:id", authenticate, async (request, response, next) => {
         c.company_name,
         c.company_abn,
         c.phone,
-        s2.option_name as state_name
+        s2.option_name as state_name,
+        s2.id as state_id
     FROM services s
         LEFT JOIN service_status ss on ss.id = s.status_id
         LEFT JOIN customers c on c.id = s.customer_id

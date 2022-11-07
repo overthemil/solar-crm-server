@@ -16,6 +16,7 @@ const getServiceSchema = (data, items) => {
       suburb: data.suburb,
       state: data.state_name,
       postcode: data.postcode,
+      state_id: data.state_id,
     },
     visit: {
       scheduled: data.visit_scheduled,
@@ -59,6 +60,7 @@ const getServiceSchemaSummary = (data) => {
       suburb: data.suburb,
       state: data.state_name,
       postcode: data.postcode,
+      state_id: data.state_id,
     },
     visit: {
       scheduled: data.visit_scheduled,
