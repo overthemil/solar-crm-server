@@ -87,6 +87,11 @@ app.use("/api/stock", require("./routes/stock/stock-list"));
 app.use("/api/services", require("./routes/services/services"));
 app.use("/api/services", require("./routes/services/id/service"));
 
+/**
+ * LEADS
+ */
+app.use("/api/leads", require("./routes/leads/leads"));
+
 // ----------------------------- END API ROUTES ----------------------------- //
 
 const unknownEndpoint = async (request, response) => {

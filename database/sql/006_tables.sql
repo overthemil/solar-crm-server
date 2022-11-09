@@ -225,3 +225,65 @@ CREATE TABLE service_files
     service_id UUID NOT NULL,
     file_id    UUID NOT NULL
 );
+
+-- ############################################################################
+-- # Leads
+-- ############################################################################
+CREATE TABLE leads
+(
+    id                  UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    first_name          TEXT,
+    last_name           TEXT,
+    company_name        TEXT,
+    company_abn         TEXT,
+    street              TEXT        NOT NULL,
+    suburb              TEXT        NOT NULL,
+    state               UUID        NOT NULL,
+    postcode            TEXT        NOT NULL,
+    email               TEXT,
+    phone               TEXT,
+    description         TEXT,
+    source_id           UUID,
+    nmi                 TEXT,
+    meter               TEXT,
+    property_comment    TEXT,
+    retailer            TEXT,
+    reference           INT                  DEFAULT 0,
+    system_size         NUMERIC     NOT NULL DEFAULT 0,
+    selling_price       NUMERIC,
+    base_price          NUMERIC,
+    distributor         TEXT,
+    phase_id            UUID,
+    story_id            UUID,
+    existing_system_id  UUID,
+    roof_type_id        UUID,
+    roof_pitch_id       UUID,
+    created_by          UUID        NOT NULL,
+    sales_id            UUID,
+    panel_design        UUID,
+    rebate_applied      BOOLEAN     NOT NULL DEFAULT FALSE,
+    rebate_type         TEXT,
+    rebate_expiry       timestamptz,
+    rebate_attachment   UUID,
+    finance_applied     BOOLEAN     NOT NULL DEFAULT FALSE,
+    finance_amount      NUMERIC,
+    finance_interest    NUMERIC,
+    finance_terms       TEXT,
+    finance_repayment   NUMERIC,
+    finance_institution TEXT,
+    finance_attachment  UUID,
+    status_id           INT         NOT NULL DEFAULT 1,
+    create_date         timestamptz NOT NULL DEFAULT current_timestamp,
+    last_updated        timestamptz NOT NULL DEFAULT current_timestamp
+);
+
+CREATE TABLE lead_logs
+(
+    id             UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    lead_id        UUID        NOT NULL,
+    msg            TEXT        NOT NULL,
+    auto           BOOLEAN     NOT NULL DEFAULT TRUE,
+    lead_status_id INT         NOT NULL,
+    created_by     TEXT        NOT NULL,
+    create_date    timestamptz NOT NULL DEFAULT current_timestamp
+);

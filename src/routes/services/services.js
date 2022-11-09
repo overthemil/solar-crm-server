@@ -28,9 +28,7 @@ router.get("/", authenticate, async (request, response, next) => {
 
   const services = await Promise.all(
     rows.map(async (data) => {
-      const user_schema = getServiceSchemaSummary(data);
-
-      return user_schema;
+      return getServiceSchemaSummary(data);
     })
   );
 
