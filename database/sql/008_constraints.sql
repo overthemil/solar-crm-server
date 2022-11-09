@@ -68,10 +68,6 @@ ALTER TABLE service_logs
     ADD CONSTRAINT status_fk FOREIGN KEY (service_status_id) REFERENCES service_status (id)
         ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE service_logs
-    ADD CONSTRAINT user_fk FOREIGN KEY (created_by) REFERENCES users (id)
-        ON UPDATE CASCADE ON DELETE CASCADE;
-
 -- ############################################################################
 -- # service_files
 -- ############################################################################

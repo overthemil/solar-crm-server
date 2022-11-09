@@ -62,7 +62,7 @@ router.get("/:id/logs", authenticate, async (request, response, next) => {
 
 router.post("/:id/logs", authenticate, async (request, response, next) => {
   const { id } = request.params;
-  const { msg, auto } = request.body;
+  const { msg, auto = true } = request.body;
 
   const sql_query = `
     INSERT INTO customer_logs(customer_id, msg, auto, created_by) VALUES ($1, $2, $3, $4) RETURNING *;

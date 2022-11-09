@@ -215,7 +215,7 @@ CREATE TABLE service_logs
     msg               TEXT        NOT NULL,
     auto              BOOLEAN     NOT NULL DEFAULT TRUE,
     service_status_id INT         NOT NULL,
-    created_by        UUID        NOT NULL,
+    created_by        TEXT        NOT NULL,
     create_date       timestamptz NOT NULL DEFAULT current_timestamp
 );
 

@@ -126,4 +126,90 @@ router.delete("/:id/items/:item", authenticate, async (request, response) => {
   return response.status(200).json({ message: "Item Deleted" });
 });
 
+router.get("/:id/logs", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+
+  const sql_query = `
+    SELECT sl.id      as id,
+       sl.msg,
+       sl.auto,
+       sl.created_by  as created_by,
+       sl.service_status_id as status_id,
+       ss.status_name as status,
+       ss.colour      as status_colour,
+       sl.create_date
+    FROM service_logs sl
+         LEFT JOIN service_status ss on ss.id = sl.service_status_id
+    WHERE service_id = $1 ORDER BY sl.create_date DESC;
+  `;
+
+  const { rows } = await db.query(sql_query, [id]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.post("/:id/logs", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+  const { msg, auto = true } = request.body;
+
+  const sql_query = `
+    INSERT INTO service_logs(service_id, msg, auto, created_by, service_status_id) 
+    VALUES ($1, $2, $3, $4, (SELECT status_id FROM services WHERE id=$1)) RETURNING *;
+  `;
+
+  const { rows } = await db.query(sql_query, [
+    id,
+    msg,
+    auto,
+    request.user.username,
+  ]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.get("/:id/files", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+
+  const sql_query = `
+    SELECT f.id, f2.file_name, f2.file_ext
+    FROM service_files f
+        LEFT JOIN files f2 on f2.id = f.file_id
+    WHERE f.service_id = $1 ORDER BY f2.create_date ASC;
+  `;
+
+  const { rows } = await db.query(sql_query, [id]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.post("/:id/files", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+  const { file_id } = request.body;
+
+  const sql_query = `
+    INSERT INTO service_files(file_id, service_id) 
+    VALUES ($1, $2) RETURNING *;
+  `;
+
+  const { rows } = await db.query(sql_query, [file_id, id]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.delete(
+  "/:id/files/:file",
+  authenticate,
+  async (request, response, next) => {
+    const { id, file } = request.params;
+
+    const sql_query = `
+    DELETE FROM service_files WHERE id = $1 AND service_id = $2
+  `;
+
+    await db.query(sql_query, [file, id]);
+
+    return response.status(200).json({ message: "File deleted" });
+  }
+);
+
 module.exports = router;
