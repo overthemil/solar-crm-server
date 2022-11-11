@@ -4,7 +4,7 @@ const db = require("../../db");
 const { authenticate, authorize } = require("../../middleware/auth");
 const { getLeadSchemaSummary } = require("../../schema/lead");
 
-router.get("/", authenticate, async (request, response, next) => {
+const getLeadsQuery = () => {
   const sql_query = `
         SELECT
             l.id,
@@ -18,8 +18,9 @@ router.get("/", authenticate, async (request, response, next) => {
             l.street,
             l.suburb,
             s2.option_name as state,
+            l.state as state_id,
             l.postcode,
-            ls.id as lead_source,
+            l.source_id,
             ls.source_name as source,
             ls.reference as source_ref,
             l.sales_id,
@@ -30,6 +31,12 @@ router.get("/", authenticate, async (request, response, next) => {
             l.status_id,
             ls2.status_name as status,
             ls2.colour as status_colour,
+            l.reference,
+            l.nmi,
+            l.meter,
+            l.property_comment,
+            l.retailer,
+            l.distributor,
             l.create_date,
             l.last_updated
         FROM leads l
@@ -37,10 +44,13 @@ router.get("/", authenticate, async (request, response, next) => {
             LEFT JOIN users s on l.sales_id = s.id
             LEFT JOIN users c on l.created_by = c.id
             LEFT JOIN lead_status ls2 on l.status_id = ls2.id
-            LEFT JOIN states s2 on l.state = s2.id;
+            LEFT JOIN states s2 on l.state = s2.id
     `;
+  return sql_query;
+};
 
-  const { rows } = await db.query(sql_query);
+router.get("/", authenticate, async (request, response, next) => {
+  const { rows } = await db.query(getLeadsQuery());
 
   const leads = await Promise.all(
     rows.map(async (data) => {

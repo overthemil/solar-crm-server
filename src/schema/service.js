@@ -54,8 +54,8 @@ const getServiceSchemaSummary = (data) => {
       company_name: data.company_name,
       company_abn: data.company_abn,
     },
-    property: {
-      address: `${data.street}, ${data.suburb} ${data.state_name} ${data.postcode}`,
+    address: {
+      full: `${data.street}, ${data.suburb} ${data.state_name} ${data.postcode}`,
       street: data.street,
       suburb: data.suburb,
       state: data.state_name,

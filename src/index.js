@@ -91,6 +91,7 @@ app.use("/api/services", require("./routes/services/id/service"));
  * LEADS
  */
 app.use("/api/leads", require("./routes/leads/leads"));
+app.use("/api/leads", require("./routes/leads/id/lead"));
 
 // ----------------------------- END API ROUTES ----------------------------- //
 
