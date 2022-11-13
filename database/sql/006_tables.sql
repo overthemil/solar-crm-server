@@ -287,3 +287,11 @@ CREATE TABLE lead_logs
     created_by     TEXT        NOT NULL,
     create_date    timestamptz NOT NULL DEFAULT current_timestamp
 );
+
+CREATE TABLE leads_stock_items
+(
+    id      UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    lead_id UUID NOT NULL,
+    item_id UUID NOT NULL,
+    amount  INT  DEFAULT 0
+);

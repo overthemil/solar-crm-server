@@ -39,6 +39,7 @@ const getLeadsQuery = () => {
             LEFT JOIN users c on l.created_by = c.id
             LEFT JOIN lead_status ls2 on l.status_id = ls2.id
             LEFT JOIN states s2 on l.state = s2.id
+        ORDER BY l.create_date DESC
     `;
   return sql_query;
 };
@@ -89,5 +90,16 @@ const getLeadQuery = () => {
   return sql_query;
 };
 
+const getLeadSystemItems = () => {
+  const sql_query = `
+    SELECT l.id, l.amount, si.brand, si.series, si.model
+      FROM leads_stock_items l
+        LEFT JOIN stock_item si on l.item_id = si.id
+    WHERE l.lead_id = $1 
+  `;
+  return sql_query;
+};
+
 module.exports.getLeadQuery = getLeadQuery;
 module.exports.getLeadsQuery = getLeadsQuery;
+module.exports.getLeadSystemItems = getLeadSystemItems;

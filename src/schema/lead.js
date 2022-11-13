@@ -48,7 +48,7 @@ const getLeadSchemaSummary = (lead) => {
   return schema;
 };
 
-const getLeadSchema = (lead) => {
+const getLeadSchema = (lead, items) => {
   const schema = {
     id: lead.id,
     description: lead.description,
@@ -87,6 +87,7 @@ const getLeadSchema = (lead) => {
     },
     system: {
       size: lead.system_size,
+      items,
     },
     status: {
       id: lead.status_id,

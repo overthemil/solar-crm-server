@@ -3,7 +3,7 @@ const router = require("express-promise-router")();
 const db = require("../../db");
 const { authenticate, authorize } = require("../../middleware/auth");
 const { getLeadsQuery, getLeadQuery } = require("../../queries/lead");
-const { getLeadSchemaSummary } = require("../../schema/lead");
+const { getLeadSchemaSummary, getLeadSchema } = require("../../schema/lead");
 
 router.get("/", authenticate, async (request, response, next) => {
   const { rows } = await db.query(getLeadsQuery());
@@ -54,8 +54,9 @@ router.post("/", authenticate, async (request, response, next) => {
     request.user.id,
   ]);
 
-  const { leadRows } = await db.query(getLeadQuery(), [rows[0].id]);
-  const lead = getLeadSchema(leadRows[0]);
+  const { rows: leadRows } = await db.query(getLeadQuery(), [rows[0].id]);
+  const { rows: itemRows } = await db.query(getLeadSystemItems(), [rows[0].id]);
+  const lead = getLeadSchema(leadRows[0], itemRows);
 
   return response.status(200).json({ data: lead });
 });

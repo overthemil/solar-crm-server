@@ -133,3 +133,14 @@ ALTER TABLE leads
 ALTER TABLE leads
     ADD CONSTRAINT state_fk FOREIGN KEY (state) REFERENCES states (id)
         ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- ############################################################################
+-- # leads_stock_items
+-- ############################################################################
+ALTER TABLE leads_stock_items
+    ADD CONSTRAINT lead_fk FOREIGN KEY (lead_id) REFERENCES leads (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE leads_stock_items
+    ADD CONSTRAINT item_fk FOREIGN KEY (item_id) REFERENCES stock_item (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;

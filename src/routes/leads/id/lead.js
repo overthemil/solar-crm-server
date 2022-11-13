@@ -2,7 +2,7 @@ const router = require("express-promise-router")();
 
 const db = require("../../../db");
 const { authenticate, authorize } = require("../../../middleware/auth");
-const { getLeadQuery } = require("../../../queries/lead");
+const { getLeadQuery, getLeadSystemItems } = require("../../../queries/lead");
 const { getLeadSchema } = require("../../../schema/lead");
 
 router.get("/:id", authenticate, async (request, response, next) => {
@@ -13,8 +13,9 @@ router.get("/:id", authenticate, async (request, response, next) => {
   if (rows.length === 0) {
     return response.status(404).json({ message: "Not found" });
   }
+  const { rows: itemRows } = await db.query(getLeadSystemItems(), [id]);
 
-  const lead = getLeadSchema(rows[0]);
+  const lead = getLeadSchema(rows[0], itemRows);
 
   return response.status(200).json({ data: lead });
 });
@@ -157,10 +158,63 @@ router.patch("/:id", authenticate, async (request, response) => {
   if (rows.length === 0) {
     return response.status(404).json({ message: "Not found" });
   }
+  const { rows: itemRows } = await db.query(getLeadSystemItems(), [id]);
 
-  const lead = getLeadSchema(rows[0]);
+  const lead = getLeadSchema(rows[0], itemRows);
 
   return response.status(200).json({ data: lead });
 });
+
+router.post("/:id/system", authenticate, async (request, response, next) => {
+  const { item_id, amount } = request.body;
+  const { id } = request.params;
+
+  const sql_query = `INSERT INTO leads_stock_items (lead_id, item_id, amount)
+                    VALUES ($1, $2, $3)`;
+
+  await db.query(sql_query, [id, item_id, amount]);
+
+  const { rows: itemRows } = await db.query(getLeadSystemItems(), [id]);
+
+  const { rows: leadRows } = await db.query(getLeadQuery(), [id]);
+  const lead = getLeadSchema(leadRows[0], itemRows);
+
+  return response.status(200).json({ data: lead });
+});
+
+router.delete(
+  "/:id/system/:item",
+  authenticate,
+  async (request, response, next) => {
+    const { id, item } = request.params;
+
+    const sql_query = `
+    DELETE FROM leads_stock_items WHERE id = $1 AND lead_id = $2
+  `;
+
+    await db.query(sql_query, [item, id]);
+
+    return response.status(200).json({ message: "Item Deleted" });
+  }
+);
+
+router.patch(
+  "/:id/system/:item",
+  authenticate,
+  async (request, response, next) => {
+    const { amount } = request.body;
+    const { id, item } = request.params;
+
+    const sql_query = `
+    UPDATE leads_stock_items SET
+        amount = COALESCE($1, amount)
+    WHERE id = $2 AND lead_id = $3 RETURNING *; 
+  `;
+
+    const { rows } = await db.query(sql_query, [amount, item, id]);
+
+    return response.status(200).json({ data: rows[0] });
+  }
+);
 
 module.exports = router;
