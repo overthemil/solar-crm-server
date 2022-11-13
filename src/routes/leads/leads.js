@@ -2,56 +2,11 @@ const router = require("express-promise-router")();
 
 const db = require("../../db");
 const { authenticate, authorize } = require("../../middleware/auth");
+const { getLeadsQuery, getLeadQuery } = require("../../queries/lead");
 const { getLeadSchemaSummary } = require("../../schema/lead");
-
-const getLeadsQuery = () => {
-  const sql_query = `
-        SELECT
-            l.id,
-            l.description,
-            l.first_name,
-            l.last_name,
-            l.company_name,
-            l.company_abn,
-            l.email,
-            l.phone,
-            l.street,
-            l.suburb,
-            s2.option_name as state,
-            l.state as state_id,
-            l.postcode,
-            l.source_id,
-            ls.source_name as source,
-            ls.reference as source_ref,
-            l.sales_id,
-            s.username as sales,
-            l.created_by,
-            c.username as creator,
-            l.system_size,
-            l.status_id,
-            ls2.status_name as status,
-            ls2.colour as status_colour,
-            l.reference,
-            l.nmi,
-            l.meter,
-            l.property_comment,
-            l.retailer,
-            l.distributor,
-            l.create_date,
-            l.last_updated
-        FROM leads l
-            LEFT JOIN lead_sources ls on l.source_id = ls.id
-            LEFT JOIN users s on l.sales_id = s.id
-            LEFT JOIN users c on l.created_by = c.id
-            LEFT JOIN lead_status ls2 on l.status_id = ls2.id
-            LEFT JOIN states s2 on l.state = s2.id
-    `;
-  return sql_query;
-};
 
 router.get("/", authenticate, async (request, response, next) => {
   const { rows } = await db.query(getLeadsQuery());
-
   const leads = await Promise.all(
     rows.map(async (data) => {
       return getLeadSchemaSummary(data);
@@ -99,7 +54,10 @@ router.post("/", authenticate, async (request, response, next) => {
     request.user.id,
   ]);
 
-  return response.status(201).json({ data: rows[0] });
+  const { leadRows } = await db.query(getLeadQuery(), [rows[0].id]);
+  const lead = getLeadSchema(leadRows[0]);
+
+  return response.status(200).json({ data: lead });
 });
 
 module.exports = router;
