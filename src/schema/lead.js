@@ -77,6 +77,13 @@ const getLeadSchema = (lead, items) => {
       phase: lead.phase,
       existing_system_id: lead.existing_system_id,
       existing_system: lead.existing_system,
+      roof_type_id: lead.roof_type_id,
+      roof_type: lead.roof_type,
+      roof_pitch_id: lead.roof_pitch_id,
+      roof_pitch: lead.roof_pitch,
+      stories_id: lead.stories_id,
+      stories: lead.stories,
+      comment: lead.property_comment,
     },
     source: {
       id: lead.source_id,
@@ -86,6 +93,25 @@ const getLeadSchema = (lead, items) => {
     sales: {
       id: lead.sales_id,
       label: lead.sales,
+    },
+    finance: {
+      selling_price: lead.selling_price,
+      base_price: lead.base_price,
+      rebate: {
+        applied: lead.rebate_applied,
+        type: lead.rebate_applied ? lead.rebate_type : null,
+        expiry: lead.rebate_applied ? lead.rebate_expiry : null,
+        attachment: lead.rebate_applied ? lead.rebate_attachment : null,
+      },
+      financing: {
+        applied: lead.finance_applied,
+        amount: lead.finance_applied ? lead.finance_amount : null,
+        interest: lead.finance_applied ? lead.finance_interest : null,
+        terms: lead.finance_applied ? lead.finance_terms : null,
+        repayment: lead.finance_applied ? lead.finance_repayment : null,
+        institution: lead.finance_applied ? lead.finance_institution : null,
+        attachment: lead.finance_applied ? lead.finance_attachment : null,
+      },
     },
     created_by: {
       id: lead.created_by,

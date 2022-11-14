@@ -261,4 +261,81 @@ router.post("/:id/logs", authenticate, async (request, response, next) => {
   return response.status(200).json({ data: rows });
 });
 
+router.get("/:id/extras", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+
+  const sql_query = `
+    SELECT l.id, l.extra as label, l.price
+    FROM lead_extras l 
+    WHERE l.lead_id = $1 ORDER BY l.price DESC;
+  `;
+
+  const { rows } = await db.query(sql_query, [id]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.post("/:id/extras", authenticate, async (request, response, next) => {
+  const { label, price } = request.body;
+  const { id } = request.params;
+
+  const sql_query = `INSERT INTO lead_extras (lead_id, extra, price)
+                    VALUES ($1, $2, $3) RETURNING *`;
+
+  const { rows } = await db.query(sql_query, [id, label, price]);
+  const extra = rows.map((row) => {
+    return {
+      id: row.id,
+      label: row.extra,
+      price: row.price,
+    };
+  });
+
+  return response.status(200).json({ data: extra });
+});
+
+router.delete(
+  "/:id/extras/:extra",
+  authenticate,
+  async (request, response, next) => {
+    const { id, extra } = request.params;
+
+    const sql_query = `
+    DELETE FROM lead_extras WHERE id = $1 AND lead_id = $2
+  `;
+
+    await db.query(sql_query, [extra, id]);
+
+    return response.status(200).json({ message: "Item Deleted" });
+  }
+);
+
+router.patch(
+  "/:id/extras/:extra",
+  authenticate,
+  async (request, response, next) => {
+    const { label, price } = request.body;
+    const { id, extra } = request.params;
+
+    const sql_query = `
+    UPDATE lead_extras SET
+        price = COALESCE($1, price),
+        extra = COALESCE($2, extra)
+    WHERE id = $3 AND lead_id = $4 RETURNING *; 
+  `;
+
+    const { rows } = await db.query(sql_query, [price, label, extra, id]);
+
+    const lead_extra = rows.map((row) => {
+      return {
+        id: row.id,
+        label: row.extra,
+        price: row.price,
+      };
+    });
+
+    return response.status(200).json({ data: lead_extra[0] });
+  }
+);
+
 module.exports = router;

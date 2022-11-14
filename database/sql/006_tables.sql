@@ -296,3 +296,11 @@ CREATE TABLE leads_stock_items
     item_id UUID NOT NULL,
     amount  INT  DEFAULT 0
 );
+
+CREATE TABLE lead_extras
+(
+    id      UUID             DEFAULT gen_random_uuid() PRIMARY KEY,
+    extra   TEXT    NOT NULL,
+    lead_id UUID    NOT NULL,
+    price   NUMERIC NOT NUll DEFAULT 0
+);

@@ -148,3 +148,10 @@ ALTER TABLE leads_stock_items
 ALTER TABLE leads_stock_items
     ADD CONSTRAINT item_fk FOREIGN KEY (item_id) REFERENCES stock_item (id)
         ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- ############################################################################
+-- # lead_extras
+-- ############################################################################
+ALTER TABLE lead_extras
+    ADD CONSTRAINT lead_fk FOREIGN KEY (lead_id) REFERENCES leads (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
