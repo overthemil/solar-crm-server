@@ -261,6 +261,7 @@ CREATE TABLE leads
     created_by          UUID        NOT NULL,
     sales_id            UUID,
     panel_design        UUID,
+    proposal            UUID,
     rebate_applied      BOOLEAN     NOT NULL DEFAULT FALSE,
     rebate_type         TEXT,
     rebate_expiry       timestamptz,

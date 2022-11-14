@@ -72,6 +72,12 @@ const getLeadSchema = (lead, items) => {
       }`,
       state_id: lead.state_id,
     },
+    property: {
+      phase_id: lead.phase_id,
+      phase: lead.phase,
+      existing_system_id: lead.existing_system_id,
+      existing_system: lead.existing_system,
+    },
     source: {
       id: lead.source_id,
       label: lead.source,
@@ -87,6 +93,8 @@ const getLeadSchema = (lead, items) => {
     },
     system: {
       size: lead.system_size,
+      panel_design: lead.panel_design,
+      proposal: lead.proposal,
       items,
     },
     status: {

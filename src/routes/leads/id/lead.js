@@ -62,6 +62,7 @@ router.patch("/:id", authenticate, async (request, response) => {
     finance_institution,
     finance_attachment,
     status_id,
+    proposal,
   } = request.body;
   const { id } = request.params;
 
@@ -106,8 +107,9 @@ router.patch("/:id", authenticate, async (request, response) => {
         finance_repayment = COALESCE($37, finance_repayment),
         finance_institution = COALESCE($38, finance_institution),
         finance_attachment = COALESCE($39, finance_attachment),
-        status_id = COALESCE($40, status_id)
-      WHERE id=$41; 
+        status_id = COALESCE($40, status_id),
+        proposal = COALESCE($41, proposal)
+      WHERE id=$42; 
     `;
   const sql_values = [
     first_name,
@@ -150,6 +152,7 @@ router.patch("/:id", authenticate, async (request, response) => {
     finance_institution,
     finance_attachment,
     status_id,
+    proposal,
     id,
   ];
   await db.query(sql_query, sql_values);
@@ -216,5 +219,46 @@ router.patch(
     return response.status(200).json({ data: rows[0] });
   }
 );
+
+router.get("/:id/logs", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+
+  const sql_query = `
+    SELECT sl.id      as id,
+       sl.msg,
+       sl.auto,
+       sl.created_by  as created_by,
+       sl.lead_status_id as status_id,
+       ss.status_name as status,
+       ss.colour      as status_colour,
+       sl.create_date
+    FROM lead_logs sl
+         LEFT JOIN lead_status ss on ss.id = sl.lead_status_id
+    WHERE lead_id = $1 ORDER BY sl.create_date DESC;
+  `;
+
+  const { rows } = await db.query(sql_query, [id]);
+
+  return response.status(200).json({ data: rows });
+});
+
+router.post("/:id/logs", authenticate, async (request, response, next) => {
+  const { id } = request.params;
+  const { msg, auto = true } = request.body;
+
+  const sql_query = `
+    INSERT INTO lead_logs(lead_id, msg, auto, created_by, lead_status_id) 
+    VALUES ($1, $2, $3, $4, (SELECT status_id FROM leads WHERE id=$1)) RETURNING *;
+  `;
+
+  const { rows } = await db.query(sql_query, [
+    id,
+    msg,
+    auto,
+    request.user.username,
+  ]);
+
+  return response.status(200).json({ data: rows });
+});
 
 module.exports = router;

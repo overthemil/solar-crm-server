@@ -134,6 +134,10 @@ ALTER TABLE leads
     ADD CONSTRAINT state_fk FOREIGN KEY (state) REFERENCES states (id)
         ON UPDATE CASCADE ON DELETE CASCADE;
 
+ALTER TABLE leads
+    ADD CONSTRAINT proposal_fk FOREIGN KEY (proposal) REFERENCES files (id)
+    ON UPDATE CASCADE ON DELETE SET NULL;
+
 -- ############################################################################
 -- # leads_stock_items
 -- ############################################################################

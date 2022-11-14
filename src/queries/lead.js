@@ -77,6 +77,12 @@ const getLeadQuery = () => {
         l.property_comment,
         l.retailer,
         l.distributor,
+        l.panel_design,
+        l.proposal,
+        p.id as phase_id,
+        p.option_name as phase,
+        es.id as existing_system_id,
+        es.option_name as existing_system,
         l.create_date,
         l.last_updated
     FROM leads l
@@ -85,6 +91,8 @@ const getLeadQuery = () => {
         LEFT JOIN users c on l.created_by = c.id
         LEFT JOIN lead_status ls2 on l.status_id = ls2.id
         LEFT JOIN states s2 on l.state = s2.id
+        LEFT JOIN phases p on l.phase_id = p.id
+        LEFT JOIN existing_system es on l.existing_system_id = es.id
     WHERE l.id = $1
   `;
   return sql_query;

@@ -2,7 +2,11 @@ const router = require("express-promise-router")();
 
 const db = require("../../db");
 const { authenticate, authorize } = require("../../middleware/auth");
-const { getLeadsQuery, getLeadQuery } = require("../../queries/lead");
+const {
+  getLeadsQuery,
+  getLeadQuery,
+  getLeadSystemItems,
+} = require("../../queries/lead");
 const { getLeadSchemaSummary, getLeadSchema } = require("../../schema/lead");
 
 router.get("/", authenticate, async (request, response, next) => {
