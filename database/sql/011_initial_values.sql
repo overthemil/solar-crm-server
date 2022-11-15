@@ -100,3 +100,19 @@ VALUES
        ('Quotation', '#dedb3a'),
        ('Complete', '#37bd3b'),
        ('Closed', '#e00b0b');
+
+-- ############################################################################
+-- # install_status
+-- ############################################################################
+INSERT INTO
+    install_status (status_name, colour)
+VALUES
+       ('Awaiting Deposit', '#3d4bb8'),
+       ('PTC', '#dbcb5e'),
+       ('Schedule', '#37bd3b'),
+       ('Review', '#0335fc'),
+       ('Awaiting Payment', '#9b3fd1'),
+       ('Retailer Notification', '#d42a47'),
+       ('STC', '#9c1199'),
+       ('Complete', '#822112'),
+       ('Cancelled', '#9c092e');

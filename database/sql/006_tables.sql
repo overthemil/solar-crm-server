@@ -49,6 +49,16 @@ CREATE TABLE lead_status
 );
 
 -- ############################################################################
+-- # Options - Installs
+-- ############################################################################
+CREATE TABLE install_status
+(
+    id          SERIAL PRIMARY KEY,
+    status_name TEXT NOT NULL,
+    colour      TEXT NOT NULL
+);
+
+-- ############################################################################
 -- # Options - Misc
 -- ############################################################################
 /*
@@ -326,4 +336,94 @@ CREATE TABLE installer_files
     id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     installer_id UUID NOT NULL,
     file_id      UUID NOT NULL
+);
+
+-- ############################################################################
+-- # Installs
+-- ############################################################################
+CREATE TABLE installs
+(
+    id                        UUID                 DEFAULT gen_random_uuid() PRIMARY KEY,
+    lead_id                   UUID,
+    reference                 TEXT,
+    deposit_paid              BOOL        NOT NULL DEFAULT FALSE,
+    deposit_amount            NUMERIC,
+    deposit_paid_date         timestamptz,
+    invoice_paid              BOOL        NOT NULL DEFAULT FALSE,
+    invoice_amount            NUMERIC,
+    invoice_paid_date         timestamptz,
+    ptc_form_sent             BOOL        NOT NULL DEFAULT FALSE,
+    ptc_form_sent_date        timestamptz,
+    ptc_approval_date         timestamptz,
+    ptc_number                TEXT,
+    ptc_condition             TEXT,
+    ptc_exempted              BOOL        NOT NULL DEFAULT FALSE,
+    ptc_approved              BOOL        NOT NULL DEFAULT FALSE,
+    inspection_exempted       BOOL        NOT NULL DEFAULT FALSE,
+    inspection_completed      BOOL        NOT NULL DEFAULT FALSE,
+    inspection_booked         BOOL        NOT NULL DEFAULT FALSE,
+    inspection_booked_date    timestamptz,
+    inspection_completed_date timestamptz,
+    inspection_name           TEXT,
+    inspection_licence        TEXT,
+    inspection_ces            TEXT,
+    review_approved           BOOL        NOT NULL DEFAULT FALSE,
+    review_approved_date      timestamptz,
+    review_comment            TEXT,
+    review_by                 UUID,
+    retailer_notice_complete  BOOL        NOT NULL DEFAULT FALSE,
+    retailer_notice_date      timestamptz,
+    schedule                  timestamptz,
+    schedule_end              timestamptz,
+    install_scheduled         BOOL        NOT NULL DEFAULT FALSE,
+    installer_id              UUID,
+    customer_id               UUID        NOT NULL,
+    street                    TEXT        NOT NULL,
+    suburb                    TEXT        NOT NULL,
+    state                     UUID        NOT NULL,
+    postcode                  TEXT        NOT NULL,
+    nmi                       TEXT,
+    meter                     TEXT,
+    property_comment          TEXT,
+    retailer                  TEXT,
+    distributor               TEXT,
+    phase_id                  UUID,
+    story_id                  UUID,
+    roof_type_id              UUID,
+    roof_pitch_id             UUID,
+    existing_system_id        UUID,
+    system_size               NUMERIC     NOT NULL DEFAULT 0,
+    selling_price             NUMERIC,
+    base_price                NUMERIC,
+    panel_design              UUID,
+    proposal                  UUID,
+    rebate_applied            BOOLEAN     NOT NULL DEFAULT FALSE,
+    rebate_type               TEXT,
+    rebate_expiry             timestamptz,
+    rebate_attachment         UUID,
+    finance_applied           BOOLEAN     NOT NULL DEFAULT FALSE,
+    finance_amount            NUMERIC,
+    finance_interest          NUMERIC,
+    finance_terms             TEXT,
+    finance_repayment         NUMERIC,
+    finance_institution       TEXT,
+    finance_attachment        UUID,
+    stc_submitted             BOOLEAN     NOT NULL DEFAULT FALSE,
+    stc_submission_date       timestamptz,
+    stc_submission_numbers    INT,
+    stc_submitted_by          UUID,
+    stc_submitted_through     TEXT,
+    stc_approval_received     BOOLEAN     NOT NULL DEFAULT FALSE,
+    stc_approval_date         timestamptz,
+    stc_approved_numbers      INT,
+    stc_approved_values       NUMERIC,
+    stc_approved_by           UUID,
+    stc_receipt_number        TEXT,
+    stc_form                  UUID,
+    stc_comment               TEXT,
+    status_id                 INT         NOT NULL DEFAULT 1,
+    created_by                UUID        NOT NULL,
+    sales_id                  UUID        NOT NULL,
+    create_date               timestamptz NOT NULL DEFAULT current_timestamp,
+    last_updated              timestamptz NOT NULL DEFAULT current_timestamp
 );
