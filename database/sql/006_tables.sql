@@ -304,3 +304,26 @@ CREATE TABLE lead_extras
     lead_id UUID    NOT NULL,
     price   NUMERIC NOT NUll DEFAULT 0
 );
+
+-- ############################################################################
+-- # Installers
+-- ############################################################################
+CREATE TABLE installers
+(
+    id            UUID             DEFAULT gen_random_uuid() PRIMARY KEY,
+    accreditation TEXT    NOT NULL,
+    licence       TEXT    NOT NULL,
+    full_name     TEXT    NOT NULL,
+    email         TEXT    NOT NULL,
+    phone         TEXT    NOT NULL,
+    expiry        timestamptz,
+    address       TEXT,
+    disabled      BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE installer_files
+(
+    id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    installer_id UUID NOT NULL,
+    file_id      UUID NOT NULL
+);
