@@ -130,6 +130,16 @@ const getLeadSystemItems = () => {
   return sql_query;
 };
 
+const getLeadExtras = () => {
+  const sql_query = `
+    SELECT id, extra as label, price 
+    FROM lead_extras 
+    WHERE lead_id = $1 
+  `;
+  return sql_query;
+};
+
+module.exports.getLeadExtras = getLeadExtras;
 module.exports.getLeadQuery = getLeadQuery;
 module.exports.getLeadsQuery = getLeadsQuery;
 module.exports.getLeadSystemItems = getLeadSystemItems;

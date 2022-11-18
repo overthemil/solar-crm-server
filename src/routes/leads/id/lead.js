@@ -2,7 +2,11 @@ const router = require("express-promise-router")();
 
 const db = require("../../../db");
 const { authenticate, authorize } = require("../../../middleware/auth");
-const { getLeadQuery, getLeadSystemItems } = require("../../../queries/lead");
+const {
+  getLeadQuery,
+  getLeadSystemItems,
+  getLeadExtras,
+} = require("../../../queries/lead");
 const { getLeadSchema } = require("../../../schema/lead");
 
 router.get("/:id", authenticate, async (request, response, next) => {
@@ -14,8 +18,9 @@ router.get("/:id", authenticate, async (request, response, next) => {
     return response.status(404).json({ message: "Not found" });
   }
   const { rows: itemRows } = await db.query(getLeadSystemItems(), [id]);
+  const { rows: extraRows } = await db.query(getLeadExtras(), [id]);
 
-  const lead = getLeadSchema(rows[0], itemRows);
+  const lead = getLeadSchema(rows[0], itemRows, extraRows);
 
   return response.status(200).json({ data: lead });
 });
@@ -291,7 +296,7 @@ router.post("/:id/extras", authenticate, async (request, response, next) => {
     };
   });
 
-  return response.status(200).json({ data: extra });
+  return response.status(200).json({ data: extra[0] });
 });
 
 router.delete(
