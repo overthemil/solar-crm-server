@@ -99,6 +99,11 @@ app.use("/api/leads", require("./routes/leads/id/lead"));
 app.use("/api/installers", require("./routes/installers/installers"));
 app.use("/api/installers", require("./routes/installers/id/installer"));
 
+/**
+ * INSTALLS
+ */
+app.use("/api/installs", require("./routes/installs/installs"));
+
 // ----------------------------- END API ROUTES ----------------------------- //
 
 const unknownEndpoint = async (request, response) => {

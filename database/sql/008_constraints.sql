@@ -249,3 +249,14 @@ ALTER TABLE installs
 ALTER TABLE installs
     ADD CONSTRAINT stc_form_fk FOREIGN KEY (stc_form) REFERENCES files (id)
         ON UPDATE CASCADE ON DELETE SET NULL;
+
+-- ############################################################################
+-- # installs_stock_items
+-- ############################################################################
+ALTER TABLE installs_stock_items
+    ADD CONSTRAINT install_fk FOREIGN KEY (install_id) REFERENCES installs (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE installs_stock_items
+    ADD CONSTRAINT item_fk FOREIGN KEY (item_id) REFERENCES stock_item (id)
+        ON UPDATE CASCADE ON DELETE CASCADE;

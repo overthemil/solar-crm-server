@@ -427,3 +427,18 @@ CREATE TABLE installs
     create_date               timestamptz NOT NULL DEFAULT current_timestamp,
     last_updated              timestamptz NOT NULL DEFAULT current_timestamp
 );
+
+CREATE TABLE reference_counts
+(
+    id          SERIAL PRIMARY KEY,
+    description TEXT UNIQUE,
+    count       INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE installs_stock_items
+(
+    id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    install_id UUID NOT NULL,
+    item_id    UUID NOT NULL,
+    amount     INT  DEFAULT 0
+);
